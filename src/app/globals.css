@@ -1,7 +1,4 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --padding: 0.3rem;
   /* Contrast to fill at least 4.5:1 */
   --brand: #518000;
   /* Contrast to fill at least 4.5:1 */
@@ -27,12 +24,114 @@
   --success-stroke-weak: hsla(162, 90.5%, 25.2%, 0.2);
   --success-fill: hsla(162, 90.5%, 25.2%, 0.05);
   --skeleton-loading-background: #e7dcdc;
+  --padding: 0.3rem;
+}
+
+:root[data-theme="light"] {
+  /* Contrast to fill at least 4.5:1 */
+  --brand: #518000;
+  /* Contrast to fill at least 4.5:1 */
+  --text-strong: #313d1a;
+  /* Contrast to fill at least 4.5:1 */
+  --text-weak: #6E7656;
+  /* Contrast to fill at least 3:1 */
+  --stroke-strong: #829669;
+  --stroke-weak-variant: hsla(82, 28.14%, 81.65%, 1);
+  --stroke-weak: hsla(82, 28.14%, 91.65%, 1);
+  --fill: #f8faf5;
+  --background: #ffffff;
+  --error-text: hsla(0, 55.7%, 50.3%, 1);
+  --error-stroke-strong: hsla(0, 56%, 50.3%, 0.8);
+  --error-stroke-weak: hsla(0, 55.7%, 50.3%, 0.2);
+  --error-fill: hsla(0, 55.7%, 50.3%, 0.05);
+  --warning-text: hsla(42, 69.5%, 33%, 1);
+  --warning-stroke-strong: hsla(42, 69.5%, 33%, 0.8);
+  --warning-stroke-weak: hsla(42, 69.5%, 33%, 0.2);
+  --warning-fill: hsla(42, 69.5%, 33%, 0.05);
+  --success-text: hsla(162, 90.5%, 25.2%, 1);
+  --success-stroke-strong: hsla(162, 90.5%, 25.2%, 0.8);
+  --success-stroke-weak: hsla(162, 90.5%, 25.2%, 0.2);
+  --success-fill: hsla(162, 90.5%, 25.2%, 0.05);
+  --skeleton-loading-background: #e7dcdc;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  /* Contrast to fill at least 4.5:1 */
+  --brand: #d7fc97;
+  /* Contrast to fill at least 4.5:1 */
+  --text-strong: #ffffff;
+  /* Contrast to fill at least 4.5:1 */
+  --text-weak: #d5d9ce;
+  /* Contrast to fill at least 3:1 */
+  --stroke-strong: #a0a695;
+  --stroke-weak-variant: hsl(82, 8.1%, 33.1%);
+  --stroke-weak: hsl(82, 8.1%, 23.1%);
+  --fill: hsl(82, 11.1%, 13.5%);
+  --background: #171912;
+  --error-text: hsla(0, 100%, 80.5%, 1);
+  --error-stroke-strong: hsla(0, 100%, 80.5%, 0.8);
+  --error-stroke-weak: hsla(0, 100%, 80.5%, 0.2);
+  --error-fill: hsla(0, 100%, 80.5%, 0.05);
+  --warning-text: hsla(42, 64.7%, 66%, 1);
+  --warning-stroke-strong: hsla(42, 64.7%, 66%, 0.8);
+  --warning-stroke-weak: hsla(42, 64.7%, 66%, 0.2);
+  --warning-fill: hsla(42, 64.7%, 66%, 0.05);
+  --success-text: hsla(162, 41.5%, 62.4%, 1);
+  --success-stroke-strong: hsla(162, 41.5%, 62.4%, 0.8);
+  --success-stroke-weak: hsla(162, 41.5%, 62.4%, 0.2);
+  --success-fill: hsla(162, 41.5%, 62.4%, 0.05);
+  --skeleton-loading-background: rgba(255, 255, 255, 0.13);
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Contrast to fill at least 4.5:1 */
+    --brand: #d7fc97;
+    /* Contrast to fill at least 4.5:1 */
+    --text-strong: #ffffff;
+    /* Contrast to fill at least 4.5:1 */
+    --text-weak: #d5d9ce;
+    /* Contrast to fill at least 3:1 */
+    --stroke-strong: #a0a695;
+    --stroke-weak-variant: hsl(82, 8.1%, 33.1%);
+    --stroke-weak: hsl(82, 8.1%, 23.1%);
+    --fill: hsl(82, 11.1%, 13.5%);
+    --background: #171912;
+    --error-text: hsla(0, 100%, 80.5%, 1);
+    --error-stroke-strong: hsla(0, 100%, 80.5%, 0.8);
+    --error-stroke-weak: hsla(0, 100%, 80.5%, 0.2);
+    --error-fill: hsla(0, 100%, 80.5%, 0.05);
+    --warning-text: hsla(42, 64.7%, 66%, 1);
+    --warning-stroke-strong: hsla(42, 64.7%, 66%, 0.8);
+    --warning-stroke-weak: hsla(42, 64.7%, 66%, 0.2);
+    --warning-fill: hsla(42, 64.7%, 66%, 0.05);
+    --success-text: hsla(162, 41.5%, 62.4%, 1);
+    --success-stroke-strong: hsla(162, 41.5%, 62.4%, 0.8);
+    --success-stroke-weak: hsla(162, 41.5%, 62.4%, 0.2);
+    --success-fill: hsla(162, 41.5%, 62.4%, 0.05);
+    --skeleton-loading-background: rgba(255, 255, 255, 0.13);
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-strong);
+  transition: background-color 300ms, color 300ms;
+}
+
+@media only screen and (max-width: 600px) {
+
+  /* Styles for screens with width less than 600px */
+  body {
+    margin: unset;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
   }
 }
 
@@ -86,6 +185,25 @@ header {
 .material-symbol--container {
   height: 24px;
   width: 24px;
+}
+
+.loading-icon {
+  --rotation-offset: 0deg;
+  /* fill: #9aa0a6; */
+  fill: var(--text-strong);
+  transform-origin: center;
+  animation: rotateIcon 650ms linear infinite;
+  height: 4rem;
+  filter: brightness(0.6);
+}
+
+@keyframes rotateIcon {
+  0% {
+    transform: rotate(var(--rotation-offset)); /* Start from the offset */
+  }
+  100% {
+    transform: rotate(calc(360deg + var(--rotation-offset))); /* Complete the 360-degree rotation with the offset */
+  }
 }
 
 /* Google fonts & Icons - START */

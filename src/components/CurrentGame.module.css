@@ -25,6 +25,13 @@
   padding: var(--padding);
 }
 
+.current-game--loading-container {
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .new-game-form--container {
   display: flex;
   flex-direction: column;

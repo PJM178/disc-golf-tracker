@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
+import { ProgressActivity } from "./Loading";
+import { useGameState } from "@/context/GameStateContext";
 
 interface NewGameFormProps {
   closeDialog: () => void;
@@ -16,10 +18,23 @@ const NewGameForm = (props: NewGameFormProps) => {
     location: { enabled: false, coord: { lat: 0, long: 0 } },
   });
 
+  const handleGameName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewGameProps({ ...newGameProps, name: e.target.value });
+  };
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    props.closeDialog();
     console.log(e);
   }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    console.log((e.target as HTMLInputElement).id)
+    if (e.key === "Enter" && (e.target as HTMLInputElement).tagName === "INPUT") {
+      e.preventDefault();
+    }
+    console.log(e);
+  };
 
   return (
     <div className={styles["new-game-form--container"]}>
@@ -37,13 +52,14 @@ const NewGameForm = (props: NewGameFormProps) => {
       <form
         className={styles["new-game-form--form--container"]}
         onSubmit={handleFormSubmit}
+        onKeyDown={handleKeyDown}
       >
         <div className={styles["new-game-form--form--input-field"]}>
           <label htmlFor="new-game-name">Nimi</label>
           <input
             name="new-game-name"
             id="new-game-name"
-            onChange={(e) => setNewGameProps({ ...newGameProps, name: e.target.value })}
+            onChange={handleGameName}
             value={newGameProps.name}
           />
         </div>
@@ -52,13 +68,13 @@ const NewGameForm = (props: NewGameFormProps) => {
           <input
             name="new-game-players"
             id="new-game-players"
-          ></input>
+          />
           <div>
-          <input
-            name="new-game-players"
-            id="new-game-players"
-          ></input>
-                  <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+            <input
+              name="new-game-players"
+              id="new-game-players"
+            />
+            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
               person_remove
             </span>
           </div>
@@ -74,7 +90,7 @@ const NewGameForm = (props: NewGameFormProps) => {
           <Switch isActive={newGameProps.location.enabled} onClick={() => setNewGameProps({ ...newGameProps, location: { ...newGameProps.location, enabled: !newGameProps.location.enabled } })} />
         </div>
         <div>
-          <button>Sulje</button>
+          <button id="close-modal">Sulje</button>
           <button>Lisää peli</button>
         </div>
       </form>
@@ -107,13 +123,26 @@ const NewGame = () => {
 };
 
 const CurrentGame = () => {
+  // const [isLoading, setIsLoading] = useState(true);
+  const { isLoading } = useGameState();
+
+  let gameState = null;
+  console.log(gameState);
+  // useEffect(() => {
+  //   console.log(localStorage.getItem("gameState"));
+  //   localStorage.setItem("gameState", JSON.stringify({ score: 10 }));
+  //   gameState = localStorage.getItem("gameState");
+  //   setIsLoading(false);
+  // }, []);
+
   return (
-    <div className={styles["container"]}>
-      <div className={styles["title--container"]}>
-        <div>Nykyinen</div>
-      </div>
-      <NewGame />
-    </div>
+    <>
+      {isLoading ?
+        <div className={styles["current-game--loading-container"]}>
+          <ProgressActivity className="loading-icon" />
+        </div> :
+        <NewGame />}
+    </>
   )
 };
 

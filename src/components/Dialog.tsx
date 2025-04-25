@@ -33,7 +33,10 @@ const Dialog = (props: DialogProps) => {
           onClick={handleCloseModal}
           onTransitionEnd={handleOnTransitionEnd}
         />
-        <div ref={dialogContainerRef} className={`${styles["dialog-content--container"]} ${props.containerClassname ?? ""}`.trim()}>
+        <div
+          ref={dialogContainerRef}
+          className={`${styles["dialog-content--container"]} ${props.containerClassname ?? ""}`.trim()}
+        >
           <div className={styles["dialog-content--content"]}>
             {props.children}
           </div>
