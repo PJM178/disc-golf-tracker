@@ -5,7 +5,7 @@ import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
-import { useGameState } from "@/context/GameStateContext";
+import { Game, useGameState } from "@/context/GameStateContext";
 
 interface NewGameFormProps {
   closeDialog: () => void;
@@ -122,11 +122,22 @@ const NewGame = () => {
   );
 };
 
+interface RunningGameProps {
+  currentGame: Game;
+}
+
+const RunningGame = (props: RunningGameProps) => {
+  return (
+    <div>
+      the current running game data is here
+    </div>
+  );
+};
+
 const CurrentGame = () => {
   // const [isLoading, setIsLoading] = useState(true);
-  const { isLoading } = useGameState();
+  const { gameState, isLoading } = useGameState();
 
-  let gameState = null;
   console.log(gameState);
   // useEffect(() => {
   //   console.log(localStorage.getItem("gameState"));
@@ -135,15 +146,23 @@ const CurrentGame = () => {
   //   setIsLoading(false);
   // }, []);
 
+  if (isLoading) {
+    return (
+      <div className={styles["current-game--loading-container"]}>
+        <ProgressActivity className="loading-icon" />
+      </div>
+    );
+  }
+
+  if (!gameState?.currentGame) {
+    return (
+      <NewGame />
+    );
+  }
+
   return (
-    <>
-      {isLoading ?
-        <div className={styles["current-game--loading-container"]}>
-          <ProgressActivity className="loading-icon" />
-        </div> :
-        <NewGame />}
-    </>
-  )
+    <RunningGame currentGame={gameState.currentGame} />
+  );
 };
 
 export default CurrentGame;
