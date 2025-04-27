@@ -1,0 +1,21 @@
+/* Textfield - BEGIN */
+
+.textfield--container {
+  --textfield-padding-top: 16px;
+  --textfield-padding-left: 14px;
+
+  position: relative;
+}
+
+.textfield--input {
+  padding: var(--textfield-padding-top) var(--textfield-padding-left);
+}
+
+.textfield--label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(var(--textfield-padding-top), var(--textfield-padding-left));
+}
+
+/* Textfield - END */

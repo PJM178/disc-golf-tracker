@@ -17,6 +17,7 @@ const NewGameForm = (props: NewGameFormProps) => {
     players: [],
     location: { enabled: false, coord: { lat: 0, long: 0 } },
   });
+  const { setGameState } = useGameState();
 
   const handleGameName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewGameProps({ ...newGameProps, name: e.target.value });
@@ -26,6 +27,23 @@ const NewGameForm = (props: NewGameFormProps) => {
     e.preventDefault();
     props.closeDialog();
     console.log(e);
+    console.log("what");
+    setGameState((prevValue) => {
+      const clonedValue = { ...prevValue };
+      console.log(clonedValue);
+      clonedValue.currentGame = {
+        id: "asd",
+        name: "",
+        players: [{ id: "", name: "", totalScore: 0 }],
+        location: { latitude: 0, longitude: 0 },
+        holes: null,
+        holeList: [],
+        startTime: new Date().getTime(),
+        endTime: null,
+      }
+
+      return clonedValue;
+    });
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {

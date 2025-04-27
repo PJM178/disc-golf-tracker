@@ -42,7 +42,7 @@ const HistoryList = (props: HistoryListProps) => {
 const History = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const { gameState } = useGameState();
-
+  console.log("rerender")
   const handleIsHistoryOpen = () => {
     setIsHistoryOpen(!isHistoryOpen);
   }
@@ -59,7 +59,7 @@ const History = () => {
       </div>
       {isHistoryOpen &&
         <div className={styles["history-list--container"]}>
-          {gameState?.history.length === 0 || !gameState ?
+          {gameState.history?.length === 0 || !gameState.history ?
             <NoHistory /> :
             <HistoryList gameHistory={gameState.history} />}
         </div>}
