@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { memo, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
@@ -24,29 +24,28 @@ interface AddPlayerInputProps {
       };
     };
   }>>;
+  playerName: string;
 }
 
-const AddPlayerInput = (props: AddPlayerInputProps) => {
+const AddPlayerInput = memo(function AddPlayerInput(props: AddPlayerInputProps) {
   const handleInputChangeEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.setNewGameProps((prevValue) => {
-      const currentPlayer = prevValue.players.find((p) => p.id === props.playerId);
-
-      if (currentPlayer) {
-        currentPlayer.name = e.target.value;
-
-        return prevValue;
-      }
-
-      return prevValue;
-    })
+    props.setNewGameProps((prevValue) => ({
+      ...prevValue,
+      players: prevValue.players.map((player) =>
+        player.id === props.playerId
+          ? { ...player, name: e.target.value }
+          : player
+      ),
+    }));
   };
 
   return (
     <input
       onChange={handleInputChangeEvent}
+      value={props.playerName}
     />
   );
-};
+});
 
 interface NewGameFormProps {
   closeDialog: () => void;
@@ -58,7 +57,7 @@ const NewGameForm = (props: NewGameFormProps) => {
     players: [{ name: "", id: "p1", totalScore: 0 }],
     location: { enabled: false, coord: { lat: 0, long: 0 } },
   });
-  
+
   const { setGameState } = useGameState();
 
   const handleGameName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,17 +65,13 @@ const NewGameForm = (props: NewGameFormProps) => {
   };
 
   const handleAddPlayer = () => {
-    setNewGameProps((prevValue) => {
-      return (
-        {
-          ...prevValue,
-          players: [
-            ...prevValue.players,
-            { name: "", id: "p" + (prevValue.players.length + 1), totalScore: 0 }
-          ]
-        }
-      );
-    })
+    setNewGameProps((prevValue) => ({
+      ...prevValue,
+      players: [
+        ...prevValue.players,
+        { name: "", id: "p" + (prevValue.players.length + 1), totalScore: 0 }
+      ]
+    }));
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -143,6 +138,7 @@ const NewGameForm = (props: NewGameFormProps) => {
                 key={p.id}
                 setNewGameProps={setNewGameProps}
                 playerId={p.id}
+                playerName={p.name}
               />
             ))}
           </div>
