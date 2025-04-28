@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
-interface Player {
+export interface Player {
   id: string;
   name: string;
   totalScore: number;
@@ -34,7 +34,7 @@ export interface Game {
 
 interface GameState {
   currentGame: Game | null;
-  history: Game[] | null;
+  history: Game[] | [];
 }
 
 interface GameStateContextType {
@@ -46,7 +46,7 @@ interface GameStateContextType {
 const GameStateContext = createContext<GameStateContextType | null>(null);
 
 export const GameStateProvider = ({ children }: { children: React.ReactNode }) => {
-  const [gameState, setGameState] = useState<GameState>({ currentGame: null, history: null });
+  const [gameState, setGameState] = useState<GameState>({ currentGame: null, history: [] });
   const [isLoading, setIsLoading] = useState(true);
 
   // Update the local storage when gameState object changes to keep it in sync
@@ -63,7 +63,9 @@ export const GameStateProvider = ({ children }: { children: React.ReactNode }) =
     if (savedState) {
       const parsedState = JSON.parse(savedState) as GameState;
 
-      setGameState(parsedState);
+      if ("currentGame" in parsedState && "history" in parsedState) {
+        setGameState(parsedState);
+      }
     }
 
     setIsLoading(false);

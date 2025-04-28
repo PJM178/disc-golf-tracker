@@ -7,6 +7,47 @@ import { Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
 import { Game, useGameState } from "@/context/GameStateContext";
 
+interface AddPlayerInputProps {
+  playerId: string;
+  setNewGameProps: React.Dispatch<React.SetStateAction<{
+    name: string;
+    players: {
+      name: string;
+      id: string;
+      totalScore: number;
+    }[];
+    location: {
+      enabled: boolean;
+      coord: {
+        lat: number;
+        long: number;
+      };
+    };
+  }>>;
+}
+
+const AddPlayerInput = (props: AddPlayerInputProps) => {
+  const handleInputChangeEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.setNewGameProps((prevValue) => {
+      const currentPlayer = prevValue.players.find((p) => p.id === props.playerId);
+
+      if (currentPlayer) {
+        currentPlayer.name = e.target.value;
+
+        return prevValue;
+      }
+
+      return prevValue;
+    })
+  };
+
+  return (
+    <input
+      onChange={handleInputChangeEvent}
+    />
+  );
+};
+
 interface NewGameFormProps {
   closeDialog: () => void;
 }
@@ -14,27 +55,40 @@ interface NewGameFormProps {
 const NewGameForm = (props: NewGameFormProps) => {
   const [newGameProps, setNewGameProps] = useState({
     name: "Uusi peli",
-    players: [],
+    players: [{ name: "", id: "p1", totalScore: 0 }],
     location: { enabled: false, coord: { lat: 0, long: 0 } },
   });
+  
   const { setGameState } = useGameState();
 
   const handleGameName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewGameProps({ ...newGameProps, name: e.target.value });
   };
 
+  const handleAddPlayer = () => {
+    setNewGameProps((prevValue) => {
+      return (
+        {
+          ...prevValue,
+          players: [
+            ...prevValue.players,
+            { name: "", id: "p" + (prevValue.players.length + 1), totalScore: 0 }
+          ]
+        }
+      );
+    })
+  };
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    props.closeDialog();
-    console.log(e);
-    console.log("what");
+
     setGameState((prevValue) => {
       const clonedValue = { ...prevValue };
       console.log(clonedValue);
       clonedValue.currentGame = {
         id: "asd",
-        name: "",
-        players: [{ id: "", name: "", totalScore: 0 }],
+        name: newGameProps.name,
+        players: newGameProps.players,
         location: { latitude: 0, longitude: 0 },
         holes: null,
         holeList: [],
@@ -44,14 +98,14 @@ const NewGameForm = (props: NewGameFormProps) => {
 
       return clonedValue;
     });
+
+    props.closeDialog();
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    console.log((e.target as HTMLInputElement).id)
     if (e.key === "Enter" && (e.target as HTMLInputElement).tagName === "INPUT") {
       e.preventDefault();
     }
-    console.log(e);
   };
 
   return (
@@ -83,20 +137,21 @@ const NewGameForm = (props: NewGameFormProps) => {
         </div>
         <div className={styles["new-game-form--form--input-field"]}>
           <label htmlFor="new-game-players">Pelaajat</label>
-          <input
-            name="new-game-players"
-            id="new-game-players"
-          />
+          <div id="new-game-players">
+            {newGameProps.players.map((p) => (
+              <AddPlayerInput
+                key={p.id}
+                setNewGameProps={setNewGameProps}
+                playerId={p.id}
+              />
+            ))}
+          </div>
           <div>
-            <input
-              name="new-game-players"
-              id="new-game-players"
-            />
             <span className={`material-symbol--container material-symbols-outlined`.trim()}>
               person_remove
             </span>
           </div>
-          <div>
+          <div onClick={handleAddPlayer}>
             <span>Lisää pelaaja</span>
             <span className={`material-symbol--container material-symbols-outlined`.trim()}>
               person_add
