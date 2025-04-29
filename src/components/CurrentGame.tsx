@@ -6,8 +6,10 @@ import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
 import { Game, useGameState } from "@/context/GameStateContext";
+import { generatePlayerId } from "@/utils/utilities";
 
 interface AddPlayerInputProps {
+  index: number;
   playerId: string;
   setNewGameProps: React.Dispatch<React.SetStateAction<{
     name: string;
@@ -39,11 +41,28 @@ const AddPlayerInput = memo(function AddPlayerInput(props: AddPlayerInputProps) 
     }));
   };
 
+  const handleRemovePlayer = () => {
+    props.setNewGameProps((prevValue) => ({
+      ...prevValue,
+      players: prevValue.players.filter((player) => player.id !== props.playerId),
+    }));
+  };
+
   return (
-    <input
-      onChange={handleInputChangeEvent}
-      value={props.playerName}
-    />
+    <div className={styles["new-game-form--form--players-input"]}>
+      <input
+        onChange={handleInputChangeEvent}
+        value={props.playerName}
+      />
+      <div
+        className={styles["new-game-form--form--players-remove-icon"]}
+        onClick={props.index === 0 ? undefined : handleRemovePlayer}
+      >
+        <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+          {props.index === 0 ? undefined : "person_remove"}
+        </span>
+      </div>
+    </div>
   );
 });
 
@@ -54,7 +73,7 @@ interface NewGameFormProps {
 const NewGameForm = (props: NewGameFormProps) => {
   const [newGameProps, setNewGameProps] = useState({
     name: "Uusi peli",
-    players: [{ name: "", id: "p1", totalScore: 0 }],
+    players: [{ name: "", id: generatePlayerId(), totalScore: 0 }],
     location: { enabled: false, coord: { lat: 0, long: 0 } },
   });
 
@@ -69,7 +88,7 @@ const NewGameForm = (props: NewGameFormProps) => {
       ...prevValue,
       players: [
         ...prevValue.players,
-        { name: "", id: "p" + (prevValue.players.length + 1), totalScore: 0 }
+        { name: "", id: generatePlayerId(), totalScore: 0 }
       ]
     }));
   };
@@ -132,20 +151,16 @@ const NewGameForm = (props: NewGameFormProps) => {
         </div>
         <div className={styles["new-game-form--form--input-field"]}>
           <label htmlFor="new-game-players">Pelaajat</label>
-          <div id="new-game-players">
-            {newGameProps.players.map((p) => (
+          <div id="new-game-players" className={styles["new-game-form--form--players-container"]}>
+            {newGameProps.players.map((p, i) => (
               <AddPlayerInput
                 key={p.id}
+                index={i}
                 setNewGameProps={setNewGameProps}
                 playerId={p.id}
                 playerName={p.name}
               />
             ))}
-          </div>
-          <div>
-            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-              person_remove
-            </span>
           </div>
           <div onClick={handleAddPlayer}>
             <span>Lisää pelaaja</span>

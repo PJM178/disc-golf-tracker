@@ -73,6 +73,24 @@
   gap: var(--padding);
 }
 
+.new-game-form--form--players-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.new-game-form--form--players-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.new-game-form--form--players-remove-icon {
+  display: flex;
+  padding: 2px;
+  align-items: center;
+  justify-content: center;
+}
+
 .new-game-form--form--input-field-row {
   display: flex;
   gap: var(--padding);
