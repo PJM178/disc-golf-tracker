@@ -9,6 +9,9 @@ interface DialogProps {
   containerClassname?: string;
 }
 
+// TODO: could have internal state here to control the rendering of the Dialog in order
+// to have transitions finish always but it's also possible that it's better that 
+// in certain cases it closes instantly but this could also be controlled internally
 const Dialog = (props: DialogProps) => {
   const backdropRef = useRef<HTMLDivElement>(null);
   const dialogContainerRef = useRef<HTMLDivElement>(null);

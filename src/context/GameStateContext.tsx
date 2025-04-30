@@ -32,7 +32,7 @@ export interface Game {
   endTime: number | null;
 }
 
-interface GameState {
+export interface GameState {
   currentGame: Game | null;
   history: Game[] | [];
 }

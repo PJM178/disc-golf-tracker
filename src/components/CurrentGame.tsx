@@ -5,8 +5,8 @@ import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
-import { Game, useGameState } from "@/context/GameStateContext";
-import { generatePlayerId } from "@/utils/utilities";
+import { Game, GameState, useGameState } from "@/context/GameStateContext";
+import { generateRandomId } from "@/utils/utilities";
 
 interface AddPlayerInputProps {
   index: number;
@@ -73,7 +73,8 @@ interface NewGameFormProps {
 const NewGameForm = (props: NewGameFormProps) => {
   const [newGameProps, setNewGameProps] = useState({
     name: "Uusi peli",
-    players: [{ name: "", id: generatePlayerId(), totalScore: 0 }],
+    holes: "0",
+    players: [{ name: "", id: generateRandomId(), totalScore: 0 }],
     location: { enabled: false, coord: { lat: 0, long: 0 } },
   });
 
@@ -83,28 +84,43 @@ const NewGameForm = (props: NewGameFormProps) => {
     setNewGameProps({ ...newGameProps, name: e.target.value });
   };
 
+  const handleGameHoles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (Number(e.target.value) && Number(e.target.value) < 0) {
+      setNewGameProps({ ...newGameProps, holes: "0" });
+    } else {
+      setNewGameProps({ ...newGameProps, holes: e.target.value });
+    }
+  };
+  
+  const handleGameHolesBlur = () => {
+    if (!newGameProps.holes) {
+      setNewGameProps({ ...newGameProps, holes: "0" })
+    }
+  };
+
   const handleAddPlayer = () => {
     setNewGameProps((prevValue) => ({
       ...prevValue,
       players: [
         ...prevValue.players,
-        { name: "", id: generatePlayerId(), totalScore: 0 }
+        { name: "", id: generateRandomId(), totalScore: 0 }
       ]
     }));
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
+    console.log(e);
     e.preventDefault();
 
     setGameState((prevValue) => {
       const clonedValue = { ...prevValue };
       console.log(clonedValue);
       clonedValue.currentGame = {
-        id: "asd",
+        id: generateRandomId(),
         name: newGameProps.name,
         players: newGameProps.players,
         location: { latitude: 0, longitude: 0 },
-        holes: null,
+        holes: Number(newGameProps.holes),
         holeList: [],
         startTime: new Date().getTime(),
         endTime: null,
@@ -150,6 +166,21 @@ const NewGameForm = (props: NewGameFormProps) => {
           />
         </div>
         <div className={styles["new-game-form--form--input-field"]}>
+          <label htmlFor="new-game-holes">Reiät</label>
+          <input
+            name="new-game-holes"
+            id="new-game-holes"
+            onChange={handleGameHoles}
+            value={newGameProps.holes}
+            type="number"
+            min="0"
+            step="1"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            onBlur={handleGameHolesBlur}
+          />
+        </div>
+        <div className={styles["new-game-form--form--input-field"]}>
           <label htmlFor="new-game-players">Pelaajat</label>
           <div id="new-game-players" className={styles["new-game-form--form--players-container"]}>
             {newGameProps.players.map((p, i) => (
@@ -162,11 +193,13 @@ const NewGameForm = (props: NewGameFormProps) => {
               />
             ))}
           </div>
-          <div onClick={handleAddPlayer}>
+          <div onClick={handleAddPlayer} className={styles["new-game-form--form--add-players"]}>
             <span>Lisää pelaaja</span>
-            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-              person_add
-            </span>
+            <div className={styles["new-game-form--form--players-remove-icon"]}>
+              <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+                person_add
+              </span>
+            </div>
           </div>
         </div>
         <div className={styles["new-game-form--form--input-field-row"]}>
@@ -174,7 +207,7 @@ const NewGameForm = (props: NewGameFormProps) => {
           <Switch isActive={newGameProps.location.enabled} onClick={() => setNewGameProps({ ...newGameProps, location: { ...newGameProps.location, enabled: !newGameProps.location.enabled } })} />
         </div>
         <div>
-          <button id="close-modal">Sulje</button>
+          <button id="close-modal" type="button">Sulje</button>
           <button>Lisää peli</button>
         </div>
       </form>
@@ -208,19 +241,45 @@ const NewGame = () => {
 
 interface RunningGameProps {
   currentGame: Game;
+  setGameState: React.Dispatch<React.SetStateAction<GameState>>
 }
 
 const RunningGame = (props: RunningGameProps) => {
+  const [confirmDialog, setConfirmDialog] = useState(false);
+
+  const handleFinishGame = () => {
+    props.setGameState((prevValue) => {
+      const clonedValue = { ...prevValue };
+
+      if (clonedValue.currentGame) {
+        clonedValue.history = [clonedValue?.currentGame, ...clonedValue.history];
+      }
+
+      clonedValue.currentGame = null;
+
+      return clonedValue;
+    })
+  };
+
   return (
-    <div>
-      the current running game data is here
-    </div>
+    <>
+      <div className={styles["running-game--container"]}>
+        <div className={styles["running-game--game-info"]}>
+          <div>{props.currentGame.name}</div>
+          <div onClick={() => setConfirmDialog(true)}>asetukset</div>
+        </div>
+      </div>
+      <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
+        <button onClick={() => setConfirmDialog(false)}>no</button>
+        <button onClick={handleFinishGame}>yes</button>
+      </Dialog>
+    </>
   );
 };
 
 const CurrentGame = () => {
   // const [isLoading, setIsLoading] = useState(true);
-  const { gameState, isLoading } = useGameState();
+  const { gameState, isLoading, setGameState } = useGameState();
 
   console.log(gameState);
   // useEffect(() => {
@@ -245,7 +304,7 @@ const CurrentGame = () => {
   }
 
   return (
-    <RunningGame currentGame={gameState.currentGame} />
+    <RunningGame currentGame={gameState.currentGame} setGameState={setGameState} />
   );
 };
 
