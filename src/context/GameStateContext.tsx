@@ -13,9 +13,10 @@ interface HoleScore {
   score: number;
 }
 
-interface Hole {
+export interface Hole {
   hole: number;
   scores: HoleScore[];
+  id: string;
 }
 
 export interface Game {

@@ -5,7 +5,7 @@ import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
-import { Game, GameState, useGameState } from "@/context/GameStateContext";
+import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
 
 interface AddPlayerInputProps {
@@ -111,6 +111,14 @@ const NewGameForm = (props: NewGameFormProps) => {
   const handleFormSubmit = (e: React.FormEvent) => {
     console.log(e);
     e.preventDefault();
+
+    const populateHoles = Array.from({ length: +newGameProps.holes }, (_, i) => {
+      const hole: Hole = { hole: i + 1, scores: [], id: generateRandomId() };
+
+      return hole;
+    });
+
+    console.log(populateHoles);
 
     setGameState((prevValue) => {
       const clonedValue = { ...prevValue };
