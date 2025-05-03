@@ -26,8 +26,8 @@ export interface Game {
   location: {
     latitude: number;
     longitude: number;
-  };
-  holes: number | null;
+  } | null;
+  holes: number | string;
   holeList: Hole[];
   startTime: number;
   endTime: number | null;
@@ -50,17 +50,12 @@ export const GameStateProvider = ({ children }: { children: React.ReactNode }) =
   const [gameState, setGameState] = useState<GameState>({ currentGame: null, history: [] });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Update the local storage when gameState object changes to keep it in sync
-  useEffect(() => {
-    if (gameState.currentGame) {
-      localStorage.setItem("gameState", JSON.stringify(gameState));
-    }
-  }, [gameState]);
+
 
   // Load the game state data from local storage on first load
   useEffect(() => {
     const savedState = localStorage.getItem("gameState");
-
+    console.log(savedState)
     if (savedState) {
       const parsedState = JSON.parse(savedState) as GameState;
 
@@ -71,6 +66,13 @@ export const GameStateProvider = ({ children }: { children: React.ReactNode }) =
 
     setIsLoading(false);
   }, []);
+
+  // Update the local storage when gameState object changes to keep it in sync
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem("gameState", JSON.stringify(gameState));
+    }
+  }, [gameState, isLoading]);
 
   const value = useMemo(() => ({ gameState, setGameState, isLoading }), [gameState, isLoading]);
 

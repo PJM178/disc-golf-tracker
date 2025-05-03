@@ -105,6 +105,11 @@
   width: fit-content;
 }
 
+.new-game-form--form--button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .running-game--container {
   display: flex;
   width: 100%;

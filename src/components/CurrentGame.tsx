@@ -8,24 +8,12 @@ import { ProgressActivity } from "./Loading";
 import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
 
+type NewGameType = Omit<Game, "startTime" | "endTime">;
+
 interface AddPlayerInputProps {
   index: number;
   playerId: string;
-  setNewGameProps: React.Dispatch<React.SetStateAction<{
-    name: string;
-    players: {
-      name: string;
-      id: string;
-      totalScore: number;
-    }[];
-    location: {
-      enabled: boolean;
-      coord: {
-        lat: number;
-        long: number;
-      };
-    };
-  }>>;
+  setNewGameProps: React.Dispatch<React.SetStateAction<NewGameType>>;
   playerName: string;
 }
 
@@ -71,11 +59,13 @@ interface NewGameFormProps {
 }
 
 const NewGameForm = (props: NewGameFormProps) => {
-  const [newGameProps, setNewGameProps] = useState({
+  const [newGameProps, setNewGameProps] = useState<NewGameType>({
     name: "Uusi peli",
-    holes: "0",
+    holes: 1,
     players: [{ name: "", id: generateRandomId(), totalScore: 0 }],
-    location: { enabled: false, coord: { lat: 0, long: 0 } },
+    location: { latitude: 0, longitude: 0 },
+    id: generateRandomId(),
+    holeList: [],
   });
 
   const { setGameState } = useGameState();
@@ -86,15 +76,17 @@ const NewGameForm = (props: NewGameFormProps) => {
 
   const handleGameHoles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (Number(e.target.value) && Number(e.target.value) < 0) {
-      setNewGameProps({ ...newGameProps, holes: "0" });
+      setNewGameProps({ ...newGameProps, holes: 1 });
+    } else if (e.target.value.length === 0) {
+      setNewGameProps({ ...newGameProps, holes: "" });
     } else {
-      setNewGameProps({ ...newGameProps, holes: e.target.value });
+      setNewGameProps({ ...newGameProps, holes: +e.target.value });
     }
   };
-  
+
   const handleGameHolesBlur = () => {
     if (!newGameProps.holes) {
-      setNewGameProps({ ...newGameProps, holes: "0" })
+      setNewGameProps({ ...newGameProps, holes: 1 })
     }
   };
 
@@ -112,24 +104,22 @@ const NewGameForm = (props: NewGameFormProps) => {
     console.log(e);
     e.preventDefault();
 
-    const populateHoles = Array.from({ length: +newGameProps.holes }, (_, i) => {
+    const populateHoles = Array.from({ length: Number(newGameProps.holes) || 1 }, (_, i) => {
       const hole: Hole = { hole: i + 1, scores: [], id: generateRandomId() };
 
       return hole;
     });
 
-    console.log(populateHoles);
-
     setGameState((prevValue) => {
       const clonedValue = { ...prevValue };
-      console.log(clonedValue);
+
       clonedValue.currentGame = {
-        id: generateRandomId(),
+        id: newGameProps.id,
         name: newGameProps.name,
         players: newGameProps.players,
         location: { latitude: 0, longitude: 0 },
-        holes: Number(newGameProps.holes),
-        holeList: [],
+        holes: newGameProps.holes || 1,
+        holeList: populateHoles,
         startTime: new Date().getTime(),
         endTime: null,
       }
@@ -186,6 +176,7 @@ const NewGameForm = (props: NewGameFormProps) => {
             inputMode="numeric"
             pattern="[0-9]*"
             onBlur={handleGameHolesBlur}
+            placeholder="Valitse "
           />
         </div>
         <div className={styles["new-game-form--form--input-field"]}>
@@ -212,10 +203,15 @@ const NewGameForm = (props: NewGameFormProps) => {
         </div>
         <div className={styles["new-game-form--form--input-field-row"]}>
           <label>Tallenna sijainti</label>
-          <Switch isActive={newGameProps.location.enabled} onClick={() => setNewGameProps({ ...newGameProps, location: { ...newGameProps.location, enabled: !newGameProps.location.enabled } })} />
+          <Switch isActive={!newGameProps.location} onClick={() => setNewGameProps({ ...newGameProps, location: !newGameProps.location ? { latitude: 0, longitude: 0 } : null })} />
         </div>
-        <div>
-          <button id="close-modal" type="button">Sulje</button>
+        <div className={styles["new-game-form--form--button-container"]}>
+          <button
+            id="close-modal"
+            type="button"
+          >
+            Sulje
+          </button>
           <button>Lisää peli</button>
         </div>
       </form>
