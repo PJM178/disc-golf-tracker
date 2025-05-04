@@ -63,13 +63,13 @@ const NewGameForm = (props: NewGameFormProps) => {
     name: "Uusi peli",
     holes: 1,
     players: [{ name: "", id: generateRandomId(), totalScore: 0 }],
-    location: { latitude: 0, longitude: 0 },
+    location: null,
     id: generateRandomId(),
     holeList: [],
   });
 
-  const { setGameState } = useGameState();
-
+  const { setGameState, metaData, setMetaData } = useGameState();
+  console.log(metaData);
   const handleGameName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewGameProps({ ...newGameProps, name: e.target.value });
   };
@@ -135,6 +135,51 @@ const NewGameForm = (props: NewGameFormProps) => {
       e.preventDefault();
     }
   };
+
+  const handleLocation = async () => {
+    if (!metaData || metaData.permissions.geolocation === "denied") {
+      return;
+    }
+
+    if (newGameProps.location) {
+      setNewGameProps({ ...newGameProps, location: null });
+    
+      return;
+    }
+
+    if (metaData.permissions.geolocation === "granted") {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        console.log("Latitude: ", pos.coords.latitude);
+        console.log("Longitude: ", pos.coords.longitude);
+
+        setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude }});
+      });
+    }
+
+    if (metaData.permissions.geolocation === "prompt") {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          console.log("Latitude: ", pos.coords.latitude);
+          console.log("Longitude: ", pos.coords.longitude);
+
+          setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude }});
+        },
+        (err) => {
+          setMetaData((prevValue) => {
+            if (prevValue) {
+              prevValue.permissions.geolocation = "denied";
+              
+              return { ...prevValue };
+            }
+
+            return prevValue;
+          });
+
+          console.error("Error prompting user: ", err.message);
+        }
+      );
+    }
+  }
 
   return (
     <div className={styles["new-game-form--container"]}>
@@ -203,7 +248,7 @@ const NewGameForm = (props: NewGameFormProps) => {
         </div>
         <div className={styles["new-game-form--form--input-field-row"]}>
           <label>Tallenna sijainti</label>
-          <Switch isActive={!newGameProps.location} onClick={() => setNewGameProps({ ...newGameProps, location: !newGameProps.location ? { latitude: 0, longitude: 0 } : null })} />
+          <Switch disabled={metaData && metaData.permissions.geolocation === "denied"  ? true : false} isActive={newGameProps.location !== null ? true : false} onClick={handleLocation} />
         </div>
         <div className={styles["new-game-form--form--button-container"]}>
           <button

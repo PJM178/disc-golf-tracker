@@ -38,21 +38,28 @@ export interface GameState {
   history: Game[] | [];
 }
 
+interface MetaData {
+  permissions: {
+    geolocation: PermissionState;
+  };
+} 
+
 interface GameStateContextType {
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>
   isLoading: boolean;
+  metaData: MetaData | null;
+  setMetaData: React.Dispatch<React.SetStateAction<MetaData | null>>
 }
 
 const GameStateContext = createContext<GameStateContextType | null>(null);
 
 export const GameStateProvider = ({ children }: { children: React.ReactNode }) => {
   const [gameState, setGameState] = useState<GameState>({ currentGame: null, history: [] });
+  const [metaData, setMetaData] = useState<MetaData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-
-
-  // Load the game state data from local storage on first load
+  // Load the game state data from local storage on first load along with some "meta data"
   useEffect(() => {
     const savedState = localStorage.getItem("gameState");
     console.log(savedState)
@@ -61,6 +68,20 @@ export const GameStateProvider = ({ children }: { children: React.ReactNode }) =
 
       if ("currentGame" in parsedState && "history" in parsedState) {
         setGameState(parsedState);
+      }
+
+      if ("permissions" in navigator && "geolocation" in navigator) {
+        async function queryGeolocationPermission() {
+          try {
+            const result = await navigator.permissions.query({ name: "geolocation" });
+
+            return setMetaData({ permissions: { geolocation: result.state } });
+          } catch (err) {
+            console.error("Error reading permissions and geolocation: ", err);
+          }
+        }
+
+        queryGeolocationPermission();
       }
     }
 
@@ -74,7 +95,7 @@ export const GameStateProvider = ({ children }: { children: React.ReactNode }) =
     }
   }, [gameState, isLoading]);
 
-  const value = useMemo(() => ({ gameState, setGameState, isLoading }), [gameState, isLoading]);
+  const value = useMemo(() => ({ gameState, setGameState, isLoading, metaData, setMetaData }), [gameState, isLoading, metaData]);
 
   return (
     <GameStateContext.Provider value={value}>
