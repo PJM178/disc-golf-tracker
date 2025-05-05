@@ -216,4 +216,9 @@ header {
     'opsz' 24
 }
 
+.material-symbols-outlined-not-filled {
+  font-variation-settings:
+    'FILL' 0
+}
+
 /* Google fonts & Icons - END */

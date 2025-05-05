@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
@@ -8,7 +8,7 @@ import { ProgressActivity } from "./Loading";
 import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
 
-type NewGameType = Omit<Game, "startTime" | "endTime">;
+type NewGameType = Omit<Game, "startTime" | "endTime" | "currentHole">;
 
 interface AddPlayerInputProps {
   index: number;
@@ -101,11 +101,10 @@ const NewGameForm = (props: NewGameFormProps) => {
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
-    console.log(e);
     e.preventDefault();
 
     const populateHoles = Array.from({ length: Number(newGameProps.holes) || 1 }, (_, i) => {
-      const hole: Hole = { hole: i + 1, scores: [], id: generateRandomId() };
+      const hole: Hole = { hole: i + 1, scores: [...newGameProps.players], id: generateRandomId(), isActive: true };
 
       return hole;
     });
@@ -120,6 +119,7 @@ const NewGameForm = (props: NewGameFormProps) => {
         location: { latitude: 0, longitude: 0 },
         holes: newGameProps.holes || 1,
         holeList: populateHoles,
+        currentHole: populateHoles[0].id,
         startTime: new Date().getTime(),
         endTime: null,
       }
@@ -143,7 +143,7 @@ const NewGameForm = (props: NewGameFormProps) => {
 
     if (newGameProps.location) {
       setNewGameProps({ ...newGameProps, location: null });
-    
+
       return;
     }
 
@@ -152,7 +152,7 @@ const NewGameForm = (props: NewGameFormProps) => {
         console.log("Latitude: ", pos.coords.latitude);
         console.log("Longitude: ", pos.coords.longitude);
 
-        setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude }});
+        setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
       });
     }
 
@@ -162,13 +162,13 @@ const NewGameForm = (props: NewGameFormProps) => {
           console.log("Latitude: ", pos.coords.latitude);
           console.log("Longitude: ", pos.coords.longitude);
 
-          setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude }});
+          setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
         },
         (err) => {
           setMetaData((prevValue) => {
             if (prevValue) {
               prevValue.permissions.geolocation = "denied";
-              
+
               return { ...prevValue };
             }
 
@@ -248,7 +248,7 @@ const NewGameForm = (props: NewGameFormProps) => {
         </div>
         <div className={styles["new-game-form--form--input-field-row"]}>
           <label>Tallenna sijainti</label>
-          <Switch disabled={metaData && metaData.permissions.geolocation === "denied"  ? true : false} isActive={newGameProps.location !== null ? true : false} onClick={handleLocation} />
+          <Switch disabled={metaData && metaData.permissions.geolocation === "denied" ? true : false} isActive={newGameProps.location !== null ? true : false} onClick={handleLocation} />
         </div>
         <div className={styles["new-game-form--form--button-container"]}>
           <button
@@ -288,12 +288,51 @@ const NewGame = () => {
   );
 };
 
+interface GameHoleProps extends Hole {
+  currentHole: string;
+  setGameState: React.Dispatch<React.SetStateAction<GameState>>
+}
+
+// TODO: Increase and decrease player hole scores, figure out how to display the data in a pleasing way
+const GameHole = (props: GameHoleProps) => {
+
+  return (
+    <li className={styles["running-game--hole-info"]}>
+      <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
+      {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>}
+      <div className={styles["running-game--hole-players--container"]}>
+        {props.scores.map((p) => (
+          <div key={p.id} className={styles["running-game--hole-players--player"]}>
+            <div>{p.name}</div>
+            <div>{p.totalScore}</div>
+            <div>
+              <div
+                onClick={handlePlayerScore}
+              >
+                <span className={`material-symbol--container material-symbols-outlined-not-filled material-symbols-outlined`.trim()}>
+                  arrow_circle_up
+                </span>
+              </div>
+              <div>
+                <span className={`material-symbol--container material-symbols-outlined-not-filled material-symbols-outlined`.trim()}>
+                  arrow_circle_down
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </li>
+  );
+};
+
 interface RunningGameProps {
   currentGame: Game;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>
 }
 
 const RunningGame = (props: RunningGameProps) => {
+  const { currentGame, setGameState } = props;
   const [confirmDialog, setConfirmDialog] = useState(false);
 
   const handleFinishGame = () => {
@@ -310,6 +349,19 @@ const RunningGame = (props: RunningGameProps) => {
     })
   };
 
+  // TODO: pass these as props to Game components and wrap them maybe to useCallback because they should not changeon re-renders
+  const handleHolePlayerScore = useCallback((dir: "inc" | "dec", holeId: string) => {
+    if (dir === "inc") {
+      props.setGameState((prevValue) => {
+
+      })
+    }
+  }, []);
+
+  const handleFinishHole = () => {
+
+  };
+
   return (
     <>
       <div className={styles["running-game--container"]}>
@@ -317,6 +369,11 @@ const RunningGame = (props: RunningGameProps) => {
           <div>{props.currentGame.name}</div>
           <div onClick={() => setConfirmDialog(true)}>asetukset</div>
         </div>
+        <ul className={styles["running-game--hole-list"]}>
+          {props.currentGame.holeList.map((hole) => (
+            <GameHole key={hole.id} {...hole} currentHole={props.currentGame.currentHole} />
+          ))}
+        </ul>
       </div>
       <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
         <button onClick={() => setConfirmDialog(false)}>no</button>

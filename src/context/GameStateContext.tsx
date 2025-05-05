@@ -8,15 +8,16 @@ export interface Player {
   totalScore: number;
 }
 
-interface HoleScore {
-  playerId: string;
-  score: number;
-}
+// interface HoleScore {
+//   playerId: string;
+//   score: number;
+// }
 
 export interface Hole {
   hole: number;
-  scores: HoleScore[];
+  scores: Player[];
   id: string;
+  isActive: boolean;
 }
 
 export interface Game {
@@ -29,6 +30,7 @@ export interface Game {
   } | null;
   holes: number | string;
   holeList: Hole[];
+  currentHole: string;
   startTime: number;
   endTime: number | null;
 }

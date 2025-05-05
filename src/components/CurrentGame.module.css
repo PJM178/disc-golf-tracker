@@ -114,10 +114,32 @@
   display: flex;
   width: 100%;
   padding: var(--padding);
+  flex-direction: column;
 }
 
 .running-game--game-info {
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.running-game--hole-info {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.running-game--hole-players--container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.running-game--hole-players--player {
+  display: flex;
+  flex-direction: row;
+}
+
+.running-game--hole-list {
+  
 }
