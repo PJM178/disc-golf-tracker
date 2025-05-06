@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
@@ -41,6 +41,7 @@ const AddPlayerInput = memo(function AddPlayerInput(props: AddPlayerInputProps) 
       <input
         onChange={handleInputChangeEvent}
         value={props.playerName}
+        id={props.playerId}
       />
       <div
         className={styles["new-game-form--form--players-remove-icon"]}
@@ -99,6 +100,20 @@ const NewGameForm = (props: NewGameFormProps) => {
       ]
     }));
   };
+
+  // When adding new players focus the input field
+  // If the field already has value, don't focus it, so in the cases when deleting players
+  useEffect(() => {
+    if (newGameProps.players.length > 1) {
+      const element = document.getElementById(newGameProps.players[newGameProps.players.length - 1].id) as HTMLInputElement;
+
+      if (element) {
+        if (!element.value) {
+          element.focus();
+        }
+      }
+    }
+  }, [newGameProps.players]);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -291,6 +306,7 @@ const NewGame = () => {
 interface GameHoleProps extends Hole {
   currentHole: string;
   handleHolePlayerScore: (dir: "inc" | "dec", holeId: string, playerId: string) => void;
+  handleFinishHole: (holeId: string) => void;
 }
 
 // TODO: Increase and decrease player hole scores, figure out how to display the data in a pleasing way
@@ -301,12 +317,18 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
       {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>}
       <div className={styles["running-game--hole-players--container"]}>
+        <div className={styles["running-game--hole-players--grid-header"]}>
+          <div>Pelaaja</div>
+          <div>pisteet</div>
+          <div />
+        </div>
         {props.scores.map((p) => (
           <div key={p.id} className={styles["running-game--hole-players--player"]}>
-            <div>{p.name}</div>
-            <div>{p.totalScore}</div>
-            <div>
+            <div className={styles["running-game--hole-players--player--name"]}>{p.name}</div>
+            <div className={styles["running-game--hole-players--player--score"]}>{p.totalScore}</div>
+            <div className={styles["running-game--hole-players--buttons--container"]}>
               <div
+                className={styles["running-game--hole-players--buttons--button"]}
                 onClick={() => props.handleHolePlayerScore("inc", props.id, p.id)}
               >
                 <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
@@ -314,6 +336,7 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
                 </span>
               </div>
               <div
+                className={styles["running-game--hole-players--buttons--button"]}
                 onClick={() => props.handleHolePlayerScore("dec", props.id, p.id)}
               >
                 <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
@@ -323,6 +346,19 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
             </div>
           </div>
         ))}
+      </div>
+      <div
+        className={styles["running-game--hole-info--finish-game--container"]}
+      >
+        <div
+          className={styles["running-game--hole-info--finish-game--button"]}
+          onClick={() => props.handleFinishHole(props.id)}
+        >
+          <span>Reikä valmis</span>
+          <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+            check_circle
+          </span>
+        </div>
       </div>
     </li>
   );
@@ -406,10 +442,29 @@ const RunningGame = (props: RunningGameProps) => {
     }
   }, [setGameState]);
 
-  const handleFinishHole = () => {
+  const handleFinishHole = useCallback((holeId: string) => {
+    setGameState((prevValue) => {
+      if (!prevValue.currentGame) return prevValue;
 
-  };
-  console.log(props.currentGame);
+      return {
+        ...prevValue,
+        currentGame: {
+          ...prevValue.currentGame,
+          holeList: prevValue.currentGame.holeList.map((h) => {
+            if (h.id === holeId) {
+              return {
+                ...h,
+                isActive: !h.isActive,
+              };
+            }
+
+            return h;
+          }),
+        },
+      };
+    });
+  }, [setGameState]);
+
   return (
     <>
       <div className={styles["running-game--container"]}>
@@ -424,6 +479,7 @@ const RunningGame = (props: RunningGameProps) => {
               {...hole}
               currentHole={props.currentGame.currentHole}
               handleHolePlayerScore={handleHolePlayerScore}
+              handleFinishHole={handleFinishHole}
             />
           ))}
         </ul>

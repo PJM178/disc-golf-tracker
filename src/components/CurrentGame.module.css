@@ -130,14 +130,50 @@
 }
 
 .running-game--hole-players--container {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.running-game--hole-players--grid-header {
+  display: contents;
 }
 
 .running-game--hole-players--player {
+  display: contents;
+}
+
+.running-game--hole-players--player--name {
   display: flex;
-  flex-direction: row;
+  align-items: center;
+}
+
+.running-game--hole-players--player--score {
+  display: flex;
+  align-items: center;
+}
+
+.running-game--hole-players--buttons--container {
+  display: flex;
+}
+
+.running-game--hole-players--buttons--button {
+  padding: var(--padding);
+  display: flex;
+}
+
+.running-game--hole-info--finish-game--container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.running-game--hole-info--finish-game--button {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  padding: var(--padding);
+  gap: 0.25rem;
 }
 
 .running-game--hole-list {

@@ -93,7 +93,7 @@ export const Switch = (props: SwitchProps) => {
       title={title}
       aria-disabled={disabled}
     >
-      <span  className={handleStyles("tack-container")}>
+      <span className={handleStyles("tack-container")}>
         <span className={handleStyles("tack")} />
         <span className={`${styles["switch--tack-border"]}${disabled ? ` ${styles["disabled"]}`: ""}`} />
       </span>
