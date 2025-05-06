@@ -8,11 +8,6 @@ export interface Player {
   totalScore: number;
 }
 
-// interface HoleScore {
-//   playerId: string;
-//   score: number;
-// }
-
 export interface Hole {
   hole: number;
   scores: Player[];

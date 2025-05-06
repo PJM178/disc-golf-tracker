@@ -290,12 +290,12 @@ const NewGame = () => {
 
 interface GameHoleProps extends Hole {
   currentHole: string;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>
+  handleHolePlayerScore: (dir: "inc" | "dec", holeId: string, playerId: string) => void;
 }
 
 // TODO: Increase and decrease player hole scores, figure out how to display the data in a pleasing way
-const GameHole = (props: GameHoleProps) => {
-
+const GameHole = memo(function GameHole(props: GameHoleProps) {
+  console.log(props);
   return (
     <li className={styles["running-game--hole-info"]}>
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
@@ -307,14 +307,16 @@ const GameHole = (props: GameHoleProps) => {
             <div>{p.totalScore}</div>
             <div>
               <div
-                onClick={handlePlayerScore}
+                onClick={() => props.handleHolePlayerScore("inc", props.id, p.id)}
               >
-                <span className={`material-symbol--container material-symbols-outlined-not-filled material-symbols-outlined`.trim()}>
+                <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
                   arrow_circle_up
                 </span>
               </div>
-              <div>
-                <span className={`material-symbol--container material-symbols-outlined-not-filled material-symbols-outlined`.trim()}>
+              <div
+                onClick={() => props.handleHolePlayerScore("dec", props.id, p.id)}
+              >
+                <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
                   arrow_circle_down
                 </span>
               </div>
@@ -324,7 +326,7 @@ const GameHole = (props: GameHoleProps) => {
       </div>
     </li>
   );
-};
+});
 
 interface RunningGameProps {
   currentGame: Game;
@@ -350,18 +352,64 @@ const RunningGame = (props: RunningGameProps) => {
   };
 
   // TODO: pass these as props to Game components and wrap them maybe to useCallback because they should not changeon re-renders
-  const handleHolePlayerScore = useCallback((dir: "inc" | "dec", holeId: string) => {
+  const handleHolePlayerScore = useCallback((dir: "inc" | "dec", holeId: string, playerId: string) => {
     if (dir === "inc") {
-      props.setGameState((prevValue) => {
+      setGameState((prevValue) => {
+        if (!prevValue.currentGame) return prevValue;
 
-      })
+        return {
+          ...prevValue,
+          currentGame: {
+            ...prevValue.currentGame,
+            holeList: prevValue.currentGame.holeList.map((h) => {
+              if (h.id === holeId) {
+                return {
+                  ...h,
+                  scores: h.scores.map((p) =>
+                    p.id === playerId
+                      ? { ...p, totalScore: p.totalScore + 1 }
+                      : p
+                  ),
+                };
+              }
+
+              return h;
+            }),
+          },
+        };
+      });
+    } else {
+      setGameState((prevValue) => {
+        if (!prevValue.currentGame) return prevValue;
+
+        return {
+          ...prevValue,
+          currentGame: {
+            ...prevValue.currentGame,
+            holeList: prevValue.currentGame.holeList.map((h) => {
+              if (h.id === holeId) {
+                return {
+                  ...h,
+                  scores: h.scores.map((p) =>
+                    p.id === playerId
+                      ? { ...p, totalScore: p.totalScore > 0 ? p.totalScore - 1 : p.totalScore }
+                      : p
+                  ),
+                };
+              }
+
+              return h;
+            }),
+          },
+        };
+      });
     }
-  }, []);
+  }, [setGameState]);
 
   const handleFinishHole = () => {
 
   };
-
+  console.log(props.currentGame);
   return (
     <>
       <div className={styles["running-game--container"]}>
@@ -371,7 +419,12 @@ const RunningGame = (props: RunningGameProps) => {
         </div>
         <ul className={styles["running-game--hole-list"]}>
           {props.currentGame.holeList.map((hole) => (
-            <GameHole key={hole.id} {...hole} currentHole={props.currentGame.currentHole} />
+            <GameHole
+              key={hole.id}
+              {...hole}
+              currentHole={props.currentGame.currentHole}
+              handleHolePlayerScore={handleHolePlayerScore}
+            />
           ))}
         </ul>
       </div>
