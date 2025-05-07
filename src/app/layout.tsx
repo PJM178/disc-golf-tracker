@@ -38,10 +38,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <GameStateProvider>
-          <Header />
-          {children}
-        </GameStateProvider>
+        <div id="root">
+          <GameStateProvider>
+            <Header />
+            {children}
+          </GameStateProvider>
+        </div>
       </body>
     </html>
   );

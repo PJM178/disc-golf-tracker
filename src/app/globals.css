@@ -139,9 +139,6 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  /* display: flex;
-  flex-direction: column;
-  gap: 10px; */
 }
 
 body {
@@ -176,9 +173,19 @@ header {
   padding: var(--padding);
 }
 
+#root {
+  width: 600px;
+  align-self: center;
+  justify-self: center;
+}
+
 @media only screen and (max-width: 600) {
   body {
     padding: 5px;
+  }
+
+  #root {
+    width: 100%;
   }
 }
 
