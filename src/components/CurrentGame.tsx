@@ -372,7 +372,8 @@ interface RunningGameProps {
 const RunningGame = (props: RunningGameProps) => {
   const { currentGame, setGameState } = props;
   const [confirmDialog, setConfirmDialog] = useState(false);
-  const holeListRef = useRef<HTMLElement>(null);
+  const holeListRef = useRef<HTMLUListElement>(null);
+  const holeListChildrenWidths = useRef<{ width: number, id: string }[]>(null);
 
   const handleFinishGame = () => {
     props.setGameState((prevValue) => {
@@ -390,15 +391,14 @@ const RunningGame = (props: RunningGameProps) => {
 
   // On mount scroll the hole that is current in the context object into view
   useEffect(() => {
-    const element = document.getElementById("hole-" +currentGame.currentHole);
+    const element = document.getElementById("hole-" + currentGame.currentHole);
 
     if (element) {
       element.scrollIntoView({ behavior: "auto" });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // TODO: pass these as props to Game components and wrap them maybe to useCallback because they should not changeon re-renders
   const handleHolePlayerScore = useCallback((dir: "inc" | "dec", holeId: string, playerId: string) => {
     if (dir === "inc") {
       setGameState((prevValue) => {
@@ -500,6 +500,48 @@ const RunningGame = (props: RunningGameProps) => {
     }
   }
 
+  const handleULOnScrollEnd = (e: React.UIEvent<HTMLUListElement, UIEvent>) => {
+    const ul = e.target as HTMLElement;
+    let endingWidth = ul.scrollLeft;
+
+    if (!holeListChildrenWidths.current) {
+      holeListChildrenWidths.current = Array.from(ul.children).map((c) => {
+        const el = c as HTMLElement;
+        return { width: el.offsetWidth, id: el.id };
+      });
+    }
+
+    for (let i = 0; i < holeListChildrenWidths.current.length; i++) {
+      const halfWidth = holeListChildrenWidths.current[i].width / 2;
+      endingWidth -= holeListChildrenWidths.current[i].width;
+
+      if (endingWidth < 0) {
+        if (Math.abs(endingWidth) < halfWidth) {
+          const element = document.getElementById(holeListChildrenWidths.current[i + 1].id);
+
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+
+            return;
+          }
+        }
+
+        const element = document.getElementById(holeListChildrenWidths.current[i].id);
+
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+
+          return;
+        }
+      }
+    }
+  };
+
+  // TODO: Update the holeListChildrenWidths here when currentGame holeList array changes
+  useEffect(() => {
+
+  }, []);
+
   return (
     <>
       <div className={styles["running-game--container"]}>
@@ -515,7 +557,12 @@ const RunningGame = (props: RunningGameProps) => {
             <option>1</option>
           </select>
           <button onClick={handleScrollIntoView}>next</button>
-          <ul className={styles["running-game--hole-list"]} ref={holeListRef}>
+          <ul
+            className={styles["running-game--hole-list"]}
+            ref={holeListRef}
+            // onScroll={handleULOnScroll}
+            onScrollEnd={handleULOnScrollEnd}
+          >
             {props.currentGame.holeList.map((hole) => (
               <GameHole
                 key={hole.id}
