@@ -123,10 +123,16 @@
   width: 100%;
 }
 
+.running-game--hole-list {
+  display: flex;
+  overflow: auto;
+}
+
 .running-game--hole-info {
   display: flex;
   width: 100%;
   flex-direction: column;
+  flex: 0 0 auto;
 }
 
 .running-game--hole-players--container {
@@ -162,6 +168,10 @@
   display: flex;
 }
 
+.running-game--hole-players--buttons--button.disabled {
+  filter: brightness(0.3);
+}
+
 .running-game--hole-info--finish-game--container {
   width: 100%;
   display: flex;
@@ -177,6 +187,3 @@
   gap: 0.25rem;
 }
 
-.running-game--hole-list {
-  
-}

@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
@@ -313,7 +313,7 @@ interface GameHoleProps extends Hole {
 const GameHole = memo(function GameHole(props: GameHoleProps) {
   console.log(props);
   return (
-    <li className={styles["running-game--hole-info"]}>
+    <li className={styles["running-game--hole-info"]} id={"hole-" + props.id}>
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
       {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>}
       <div className={styles["running-game--hole-players--container"]}>
@@ -336,8 +336,8 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
                 </span>
               </div>
               <div
-                className={styles["running-game--hole-players--buttons--button"]}
-                onClick={() => props.handleHolePlayerScore("dec", props.id, p.id)}
+                className={`${styles["running-game--hole-players--buttons--button"]} ${p.totalScore === 0 ? styles["disabled"] : ""}`.trim()}
+                onClick={p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id)}
               >
                 <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
                   arrow_circle_down
@@ -372,6 +372,7 @@ interface RunningGameProps {
 const RunningGame = (props: RunningGameProps) => {
   const { currentGame, setGameState } = props;
   const [confirmDialog, setConfirmDialog] = useState(false);
+  const holeListRef = useRef<HTMLElement>(null);
 
   const handleFinishGame = () => {
     props.setGameState((prevValue) => {
@@ -386,6 +387,16 @@ const RunningGame = (props: RunningGameProps) => {
       return clonedValue;
     })
   };
+
+  // On mount scroll the hole that is current in the context object into view
+  useEffect(() => {
+    const element = document.getElementById("hole-" +currentGame.currentHole);
+
+    if (element) {
+      element.scrollIntoView({ behavior: "auto" });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // TODO: pass these as props to Game components and wrap them maybe to useCallback because they should not changeon re-renders
   const handleHolePlayerScore = useCallback((dir: "inc" | "dec", holeId: string, playerId: string) => {
@@ -446,24 +457,48 @@ const RunningGame = (props: RunningGameProps) => {
     setGameState((prevValue) => {
       if (!prevValue.currentGame) return prevValue;
 
+      // Update holeList
+      const updatedHoleList = prevValue.currentGame.holeList.map((h) => {
+        if (h.id === holeId) {
+          return { ...h, isActive: !h.isActive };
+        }
+        return h;
+      });
+
+      // Scroll to the next hole - should create the hole here or somewhere else if it doesn't exist
+      // but how to handle finishing the game need to be taken into account, since if the holes
+      // have been defined beforehand on creating the game, the last hole is likely the last hole
+      // so the next hole button should finish the game.
+      const holeIndex = prevValue.currentGame.holeList.findIndex((h) => h.id === holeId);
+
+      if (holeIndex < prevValue.currentGame.holeList.length - 1) {
+        const nextHoleId = prevValue.currentGame.holeList[holeIndex + 1].id;
+
+        const element = document.getElementById("hole-" + nextHoleId);
+
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
       return {
         ...prevValue,
         currentGame: {
           ...prevValue.currentGame,
-          holeList: prevValue.currentGame.holeList.map((h) => {
-            if (h.id === holeId) {
-              return {
-                ...h,
-                isActive: !h.isActive,
-              };
-            }
-
-            return h;
-          }),
+          currentHole: "giqd0by8",
+          holeList: updatedHoleList,
         },
       };
     });
   }, [setGameState]);
+
+  const handleScrollIntoView = () => {
+    const element = document.getElementById("hole-a8qw904b");
+
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
   return (
     <>
@@ -472,17 +507,26 @@ const RunningGame = (props: RunningGameProps) => {
           <div>{props.currentGame.name}</div>
           <div onClick={() => setConfirmDialog(true)}>asetukset</div>
         </div>
-        <ul className={styles["running-game--hole-list"]}>
-          {props.currentGame.holeList.map((hole) => (
-            <GameHole
-              key={hole.id}
-              {...hole}
-              currentHole={props.currentGame.currentHole}
-              handleHolePlayerScore={handleHolePlayerScore}
-              handleFinishHole={handleFinishHole}
-            />
-          ))}
-        </ul>
+        <div>
+          <button onClick={handleScrollIntoView}>scroll into view</button>
+          <button onClick={handleScrollIntoView}>previous</button>
+          <button onClick={handleScrollIntoView}>jump to?</button>
+          <select>
+            <option>1</option>
+          </select>
+          <button onClick={handleScrollIntoView}>next</button>
+          <ul className={styles["running-game--hole-list"]} ref={holeListRef}>
+            {props.currentGame.holeList.map((hole) => (
+              <GameHole
+                key={hole.id}
+                {...hole}
+                currentHole={props.currentGame.currentHole}
+                handleHolePlayerScore={handleHolePlayerScore}
+                handleFinishHole={handleFinishHole}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
       <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
         <button onClick={() => setConfirmDialog(false)}>no</button>
