@@ -131,7 +131,7 @@ const NewGameForm = (props: NewGameFormProps) => {
         id: newGameProps.id,
         name: newGameProps.name,
         players: newGameProps.players,
-        location: { latitude: 0, longitude: 0 },
+        location: newGameProps.location,
         holes: newGameProps.holes || 1,
         holeList: populateHoles,
         currentHole: populateHoles[0].id,
@@ -374,7 +374,8 @@ const RunningGame = (props: RunningGameProps) => {
   const [confirmDialog, setConfirmDialog] = useState(false);
   const holeListRef = useRef<HTMLUListElement>(null);
   const holeListChildrenWidths = useRef<{ width: number, id: string }[]>(null);
-
+  const [currentHoleIndex, setCurrentHoleIndex] = useState(currentGame.holeList.findIndex((h) => h.id === currentGame.currentHole));
+  console.log(currentHoleIndex);
   const handleFinishGame = () => {
     props.setGameState((prevValue) => {
       const clonedValue = { ...prevValue };
@@ -485,7 +486,7 @@ const RunningGame = (props: RunningGameProps) => {
         ...prevValue,
         currentGame: {
           ...prevValue.currentGame,
-          currentHole: "giqd0by8",
+          currentHole: "hrewknma",
           holeList: updatedHoleList,
         },
       };
@@ -500,6 +501,21 @@ const RunningGame = (props: RunningGameProps) => {
     }
   }
 
+  const handleScrollNextHole = () => {
+    if (currentHoleIndex + 1 < currentGame.holeList.length) {
+      const holeId = currentGame.holeList[currentHoleIndex + 1].id;
+
+      const element = document.getElementById("hole-" + holeId);
+
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+
+        setCurrentHoleIndex(currentHoleIndex + 1);
+      }
+    }
+  };
+
+  // Scroll into view the closest child node when the scrolling ends
   const handleULOnScrollEnd = (e: React.UIEvent<HTMLUListElement, UIEvent>) => {
     const ul = e.target as HTMLElement;
     let endingWidth = ul.scrollLeft;
@@ -556,7 +572,7 @@ const RunningGame = (props: RunningGameProps) => {
           <select>
             <option>1</option>
           </select>
-          <button onClick={handleScrollIntoView}>next</button>
+          <button onClick={handleScrollNextHole}>next</button>
           <ul
             className={styles["running-game--hole-list"]}
             ref={holeListRef}
