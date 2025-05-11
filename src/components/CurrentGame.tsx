@@ -515,6 +515,20 @@ const RunningGame = (props: RunningGameProps) => {
     }
   };
 
+  const handleScrollPreviousHole = () => {
+    if (currentHoleIndex !== 0) {
+      const holeId = currentGame.holeList[currentHoleIndex - 1].id;
+
+      const element = document.getElementById("hole-" + holeId);
+
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+
+        setCurrentHoleIndex(currentHoleIndex - 1);
+      }
+    }
+  };
+
   // Scroll into view the closest child node when the scrolling ends
   const handleULOnScrollEnd = (e: React.UIEvent<HTMLUListElement, UIEvent>) => {
     const ul = e.target as HTMLElement;
@@ -567,7 +581,7 @@ const RunningGame = (props: RunningGameProps) => {
         </div>
         <div>
           <button onClick={handleScrollIntoView}>scroll into view</button>
-          <button onClick={handleScrollIntoView}>previous</button>
+          <button onClick={handleScrollPreviousHole}>previous</button>
           <button onClick={handleScrollIntoView}>jump to?</button>
           <select>
             <option>1</option>
