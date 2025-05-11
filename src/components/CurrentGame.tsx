@@ -375,6 +375,7 @@ const RunningGame = (props: RunningGameProps) => {
   const holeListRef = useRef<HTMLUListElement>(null);
   const holeListChildrenWidths = useRef<{ width: number, id: string }[]>(null);
   const [currentHoleIndex, setCurrentHoleIndex] = useState(currentGame.holeList.findIndex((h) => h.id === currentGame.currentHole));
+  const scrollFromButton = useRef<boolean>(false);
   console.log(currentHoleIndex);
   const handleFinishGame = () => {
     props.setGameState((prevValue) => {
@@ -503,6 +504,8 @@ const RunningGame = (props: RunningGameProps) => {
 
   const handleScrollNextHole = () => {
     if (currentHoleIndex + 1 < currentGame.holeList.length) {
+      scrollFromButton.current = true;
+
       const holeId = currentGame.holeList[currentHoleIndex + 1].id;
 
       const element = document.getElementById("hole-" + holeId);
@@ -517,6 +520,8 @@ const RunningGame = (props: RunningGameProps) => {
 
   const handleScrollPreviousHole = () => {
     if (currentHoleIndex !== 0) {
+      scrollFromButton.current = true;
+
       const holeId = currentGame.holeList[currentHoleIndex - 1].id;
 
       const element = document.getElementById("hole-" + holeId);
@@ -531,6 +536,12 @@ const RunningGame = (props: RunningGameProps) => {
 
   // Scroll into view the closest child node when the scrolling ends
   const handleULOnScrollEnd = (e: React.UIEvent<HTMLUListElement, UIEvent>) => {
+    if (scrollFromButton.current) {
+      scrollFromButton.current = false;
+
+      return;
+    }
+
     const ul = e.target as HTMLElement;
     let endingWidth = ul.scrollLeft;
 
@@ -551,6 +562,7 @@ const RunningGame = (props: RunningGameProps) => {
 
           if (element) {
             element.scrollIntoView({ behavior: "smooth" });
+            setCurrentHoleIndex(i + 1);
 
             return;
           }
@@ -560,6 +572,7 @@ const RunningGame = (props: RunningGameProps) => {
 
         if (element) {
           element.scrollIntoView({ behavior: "smooth" });
+          setCurrentHoleIndex(i);
 
           return;
         }
