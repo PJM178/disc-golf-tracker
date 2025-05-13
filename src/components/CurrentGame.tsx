@@ -558,7 +558,7 @@ const RunningGame = (props: RunningGameProps) => {
       endingWidth -= holeListChildrenWidths.current[i].width;
 
       if (endingWidth < 0) {
-        if (currentHoleIndex !== i) {
+        if (currentHoleIndex > i) {
           if (Math.abs(endingWidth) > currentWidth * 0.3) {
             const element = document.getElementById(holeListChildrenWidths.current[i].id);
 
