@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
@@ -380,7 +380,7 @@ const RunningGame = (props: RunningGameProps) => {
     return holeIndex < 0 ? 0 : holeIndex;
   });
   const scrollFromButton = useRef<boolean>(false);
-  console.log(currentHoleIndex);
+
   const handleFinishGame = () => {
     props.setGameState((prevValue) => {
       const clonedValue = { ...prevValue };
@@ -554,13 +554,24 @@ const RunningGame = (props: RunningGameProps) => {
     }
 
     for (let i = 0; i < holeListChildrenWidths.current.length; i++) {
-      const halfWidth = holeListChildrenWidths.current[i].width / 2;
+      const currentWidth = holeListChildrenWidths.current[i].width;
       endingWidth -= holeListChildrenWidths.current[i].width;
 
       if (endingWidth < 0) {
-        console.log(Math.abs(endingWidth));
-        console.log(halfWidth);
-        if (Math.abs(endingWidth) < halfWidth) {
+        if (currentHoleIndex !== i) {
+          if (Math.abs(endingWidth) > currentWidth * 0.3) {
+            const element = document.getElementById(holeListChildrenWidths.current[i].id);
+
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth" });
+              setCurrentHoleIndex(i);
+
+              return;
+            }
+          }
+        }
+
+        if (Math.abs(endingWidth) < currentWidth * 0.7) {
           const element = document.getElementById(holeListChildrenWidths.current[i + 1].id);
 
           if (element) {
