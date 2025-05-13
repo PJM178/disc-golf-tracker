@@ -414,6 +414,12 @@ const RunningGame = (props: RunningGameProps) => {
           ...prevValue,
           currentGame: {
             ...prevValue.currentGame,
+            players: prevValue.currentGame.players.map((p) => {
+              return {
+                ...p,
+                totalScore: p.id === playerId ? p.totalScore + 1 : p.totalScore,
+              };
+            }),
             holeList: prevValue.currentGame.holeList.map((h) => {
               if (h.id === holeId) {
                 return {
@@ -439,6 +445,12 @@ const RunningGame = (props: RunningGameProps) => {
           ...prevValue,
           currentGame: {
             ...prevValue.currentGame,
+            players: prevValue.currentGame.players.map((p) => {
+              return {
+                ...p,
+                totalScore: p.id === playerId ? p.totalScore > 0 ? p.totalScore - 1 : p.totalScore : p.totalScore,
+              };
+            }),
             holeList: prevValue.currentGame.holeList.map((h) => {
               if (h.id === holeId) {
                 return {
