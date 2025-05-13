@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Switch } from "./Buttons";
@@ -374,7 +374,11 @@ const RunningGame = (props: RunningGameProps) => {
   const [confirmDialog, setConfirmDialog] = useState(false);
   const holeListRef = useRef<HTMLUListElement>(null);
   const holeListChildrenWidths = useRef<{ width: number, id: string }[]>(null);
-  const [currentHoleIndex, setCurrentHoleIndex] = useState(currentGame.holeList.findIndex((h) => h.id === currentGame.currentHole));
+  const [currentHoleIndex, setCurrentHoleIndex] = useState(() => {
+    const holeIndex = currentGame.holeList.findIndex((h) => h.id === currentGame.currentHole);
+
+    return holeIndex < 0 ? 0 : holeIndex;
+  });
   const scrollFromButton = useRef<boolean>(false);
   console.log(currentHoleIndex);
   const handleFinishGame = () => {
@@ -494,14 +498,6 @@ const RunningGame = (props: RunningGameProps) => {
     });
   }, [setGameState]);
 
-  const handleScrollIntoView = () => {
-    const element = document.getElementById("hole-a8qw904b");
-
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  }
-
   const handleScrollNextHole = () => {
     if (currentHoleIndex + 1 < currentGame.holeList.length) {
       scrollFromButton.current = true;
@@ -525,6 +521,7 @@ const RunningGame = (props: RunningGameProps) => {
     setCurrentHoleIndex(+e.target.value - 1);
   };
 
+  // Side effect of currentHoleIndex changes is defined here
   useEffect(() => {
     if (!scrollFromButton.current) return;
 
@@ -561,6 +558,7 @@ const RunningGame = (props: RunningGameProps) => {
       endingWidth -= holeListChildrenWidths.current[i].width;
 
       if (endingWidth < 0) {
+        console.log(Math.abs(endingWidth) < halfWidth);
         if (Math.abs(endingWidth) < halfWidth) {
           const element = document.getElementById(holeListChildrenWidths.current[i + 1].id);
 
@@ -597,9 +595,7 @@ const RunningGame = (props: RunningGameProps) => {
           <div onClick={() => setConfirmDialog(true)}>asetukset</div>
         </div>
         <div>
-          <button onClick={handleScrollIntoView}>scroll into view</button>
           <button onClick={handleScrollPreviousHole}>previous</button>
-          <button onClick={handleScrollIntoView}>jump to?</button>
           <select
             onChange={handleHoleOptionSelect}
             value={currentHoleIndex + 1}
