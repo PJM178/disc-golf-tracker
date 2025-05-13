@@ -558,7 +558,8 @@ const RunningGame = (props: RunningGameProps) => {
       endingWidth -= holeListChildrenWidths.current[i].width;
 
       if (endingWidth < 0) {
-        console.log(Math.abs(endingWidth) < halfWidth);
+        console.log(Math.abs(endingWidth));
+        console.log(halfWidth);
         if (Math.abs(endingWidth) < halfWidth) {
           const element = document.getElementById(holeListChildrenWidths.current[i + 1].id);
 
@@ -592,7 +593,14 @@ const RunningGame = (props: RunningGameProps) => {
       <div className={styles["running-game--container"]}>
         <div className={styles["running-game--game-info"]}>
           <div>{props.currentGame.name}</div>
-          <div onClick={() => setConfirmDialog(true)}>asetukset</div>
+          <div
+            className={styles["new-game-form--title-symbol--container"]}
+            onClick={() => setConfirmDialog(true)}
+          >
+            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+              settings
+            </span>
+          </div>
         </div>
         <div>
           <button onClick={handleScrollPreviousHole}>previous</button>
