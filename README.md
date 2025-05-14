@@ -1,1 +1,1 @@
-This will be a frisbee golf score tracker. The plan is to save the scores to local storage so it's device specific if you want the score history. There is no plan currently to extend this app to include a server and a database.
+This is a purely client side, static disc golf tracker app.
