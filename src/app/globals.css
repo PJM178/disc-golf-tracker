@@ -28,18 +28,18 @@
 }
 
 :root[data-theme="light"] {
+  /* These are from the book as is */
   /* Contrast to fill at least 4.5:1 */
-  --brand: #518000;
+  --brand: hsl(230, 64.8%, 57.4%);
   /* Contrast to fill at least 4.5:1 */
-  --text-strong: #313d1a;
+  --text-strong: hsl(230, 39.9%, 17.2%);
   /* Contrast to fill at least 4.5:1 */
-  --text-weak: #6E7656;
+  --text-weak: hsl(230, 15.6%, 41.5%);
   /* Contrast to fill at least 3:1 */
-  --stroke-strong: #829669;
-  --stroke-weak-variant: hsla(82, 28.14%, 81.65%, 1);
-  --stroke-weak: hsla(82, 28.14%, 91.65%, 1);
-  --fill: #f8faf5;
-  --background: #ffffff;
+  --stroke-strong: hsl(230, 17.6%, 57.5%);
+  --stroke-weak: hsl(230, 28.1%, 91.6%);
+  --fill: hsl(230, 32.9%, 97%);
+  --background: hsl(0, 0%, 100%);
   --error-text: hsla(0, 55.7%, 50.3%, 1);
   --error-stroke-strong: hsla(0, 56%, 50.3%, 0.8);
   --error-stroke-weak: hsla(0, 55.7%, 50.3%, 0.2);
@@ -144,7 +144,7 @@ body {
 }
 
 body {
-  color: var(--foreground);
+  color: var(--text-strong);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -189,6 +189,23 @@ header {
   #root {
     width: 100%;
   }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--padding);
+}
+
+.title--container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.selected {
+  color: var(--brand);
 }
 
 .material-symbol--container {

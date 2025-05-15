@@ -48,6 +48,7 @@
 .new-game-form--title-symbol--container {
   margin-left: auto;
   padding: 5px;
+  display: flex;
 }
 
 .new-game-form--title::after {

@@ -1,6 +1,4 @@
 "use client"
-
-import { useState } from "react";
 import styles from "./History.module.css";
 import { Game, useGameState } from "@/context/GameStateContext";
 
@@ -40,29 +38,13 @@ const HistoryList = (props: HistoryListProps) => {
 };
 
 const History = () => {
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const { gameState } = useGameState();
-  console.log("rerender")
-  const handleIsHistoryOpen = () => {
-    setIsHistoryOpen(!isHistoryOpen);
-  }
 
   return (
-    <div className={styles["container"]}>
-      <div onClick={handleIsHistoryOpen} className={styles["title--container"]}>
-        <div>Historia</div>
-        <div
-          className={`material-symbol--container material-symbols-outlined ${styles["symbol"]} ${isHistoryOpen ? styles["open"] : ""}`.trim()}
-        >
-          keyboard_arrow_down
-        </div>
-      </div>
-      {isHistoryOpen &&
-        <div className={styles["history-list--container"]}>
-          {gameState.history?.length === 0 || !gameState.history ?
-            <NoHistory /> :
-            <HistoryList gameHistory={gameState.history} />}
-        </div>}
+    <div className={styles["history-list--container"]}>
+      {gameState.history?.length === 0 || !gameState.history ?
+        <NoHistory /> :
+        <HistoryList gameHistory={gameState.history} />}
     </div>
   );
 };
