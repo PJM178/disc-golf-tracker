@@ -4,8 +4,7 @@ import { useState } from "react";
 import CurrentGame from "./CurrentGame";
 import History from "./History";
 import PaneSelector from "./PaneSelector";
-import CurrentGameContainer from "./CurrentGameContainer";
-import HistoryContainer from "./HistoryContainer";
+import StateContainer from "./StateContainer";
 
 export type CurrentPaneType = "home" | "history";
 
@@ -15,13 +14,13 @@ const Content = () => {
   return (
     <>
       {currentPane === "home" &&
-        <CurrentGameContainer>
+        <StateContainer name="nykyinen">
           <CurrentGame />
-        </CurrentGameContainer>}
+        </StateContainer>}
       {currentPane === "history" &&
-        <HistoryContainer>
+        <StateContainer name="historia">
           <History />
-        </HistoryContainer>}
+        </StateContainer>}
       <PaneSelector currentPane={currentPane} setCurrentPane={setCurrentPane} />
     </>
   );
