@@ -405,6 +405,7 @@ const RunningGame = (props: RunningGameProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Both total player game score and hole scores
   const handleHolePlayerScore = useCallback((dir: "inc" | "dec", holeId: string, playerId: string) => {
     if (dir === "inc") {
       setGameState((prevValue) => {
@@ -613,45 +614,43 @@ const RunningGame = (props: RunningGameProps) => {
 
   return (
     <>
-      <div className={styles["running-game--container"]}>
-        <div className={styles["running-game--game-info"]}>
-          <div>{props.currentGame.name}</div>
-          <div
-            className={styles["new-game-form--title-symbol--container"]}
-            onClick={() => setConfirmDialog(true)}
-          >
-            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-              settings
-            </span>
-          </div>
+      <div className={styles["running-game--game-info"]}>
+        <h2>{props.currentGame.name}</h2>
+        <div
+          className={styles["new-game-form--title-symbol--container"]}
+          onClick={() => setConfirmDialog(true)}
+        >
+          <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+            settings
+          </span>
         </div>
-        <div>
-          <button onClick={handleScrollPreviousHole}>previous</button>
-          <select
-            onChange={handleHoleOptionSelect}
-            value={currentHoleIndex + 1}
-          >
-            {currentGame.holeList.map((h) => (
-              <option key={h.id}>{h.hole}</option>
-            ))}
-          </select>
-          <button onClick={handleScrollNextHole}>next</button>
-          <ul
-            className={styles["running-game--hole-list"]}
-            ref={holeListRef}
-            onScrollEnd={handleULOnScrollEnd}
-          >
-            {props.currentGame.holeList.map((hole) => (
-              <GameHole
-                key={hole.id}
-                {...hole}
-                currentHole={props.currentGame.currentHole}
-                handleHolePlayerScore={handleHolePlayerScore}
-                handleFinishHole={handleFinishHole}
-              />
-            ))}
-          </ul>
-        </div>
+      </div>
+      <div>
+        <button onClick={handleScrollPreviousHole}>previous</button>
+        <select
+          onChange={handleHoleOptionSelect}
+          value={currentHoleIndex + 1}
+        >
+          {currentGame.holeList.map((h) => (
+            <option key={h.id}>{h.hole}</option>
+          ))}
+        </select>
+        <button onClick={handleScrollNextHole}>next</button>
+        <ul
+          className={styles["running-game--hole-list"]}
+          ref={holeListRef}
+          onScrollEnd={handleULOnScrollEnd}
+        >
+          {props.currentGame.holeList.map((hole) => (
+            <GameHole
+              key={hole.id}
+              {...hole}
+              currentHole={props.currentGame.currentHole}
+              handleHolePlayerScore={handleHolePlayerScore}
+              handleFinishHole={handleFinishHole}
+            />
+          ))}
+        </ul>
       </div>
       <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
         <button onClick={() => setConfirmDialog(false)}>no</button>
@@ -662,16 +661,9 @@ const RunningGame = (props: RunningGameProps) => {
 };
 
 const CurrentGame = () => {
-  // const [isLoading, setIsLoading] = useState(true);
   const { gameState, isLoading, setGameState } = useGameState();
 
   console.log(gameState);
-  // useEffect(() => {
-  //   console.log(localStorage.getItem("gameState"));
-  //   localStorage.setItem("gameState", JSON.stringify({ score: 10 }));
-  //   gameState = localStorage.getItem("gameState");
-  //   setIsLoading(false);
-  // }, []);
 
   if (isLoading) {
     return (

@@ -1,0 +1,25 @@
+.pane-selector--container {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  justify-content: center;
+}
+
+.pane-selector--symbol-container {
+  display: flex;
+  padding: calc(var(--padding) + 1rem);
+  position: relative;
+}
+
+.pane-selector--symbol-container:global(.selected)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 0.1rem;
+  width: 100%;
+  background-color: var(--brand);
+  z-index: 1;
+}
