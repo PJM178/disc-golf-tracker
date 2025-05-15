@@ -620,7 +620,7 @@ const RunningGame = (props: RunningGameProps) => {
   // Update the holeListChildrenWidths here when currentGame holeList array changes
   useEffect(() => {
     holeListChildrenWidths.current = null;
-  }, [currentGame.holeList]);
+  }, [currentGame.holeList.length]);
 
   return (
     <>
