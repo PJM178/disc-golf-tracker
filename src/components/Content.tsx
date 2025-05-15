@@ -14,11 +14,11 @@ const Content = () => {
   return (
     <>
       {currentPane === "home" &&
-        <StateContainer name="nykyinen">
+        <StateContainer name="Nykyinen">
           <CurrentGame />
         </StateContainer>}
       {currentPane === "history" &&
-        <StateContainer name="historia">
+        <StateContainer name="Historia">
           <History />
         </StateContainer>}
       <PaneSelector currentPane={currentPane} setCurrentPane={setCurrentPane} />

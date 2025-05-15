@@ -380,6 +380,7 @@ const RunningGame = (props: RunningGameProps) => {
     return holeIndex < 0 ? 0 : holeIndex;
   });
   const scrollFromButton = useRef<boolean>(false);
+  const holeIndexRef = useRef<number>(null);
 
   const handleFinishGame = () => {
     props.setGameState((prevValue) => {
@@ -476,29 +477,34 @@ const RunningGame = (props: RunningGameProps) => {
     setGameState((prevValue) => {
       if (!prevValue.currentGame) return prevValue;
 
-      // Update holeList
+      const holeIndex = prevValue.currentGame.holeList.findIndex((h) => h.id === holeId);
+
+      // Update the holeList
       const updatedHoleList = prevValue.currentGame.holeList.map((h) => {
         if (h.id === holeId) {
           return { ...h, isActive: !h.isActive };
         }
+
         return h;
       });
 
-      // Scroll to the next hole - should create the hole here or somewhere else if it doesn't exist
-      // but how to handle finishing the game need to be taken into account, since if the holes
-      // have been defined beforehand on creating the game, the last hole is likely the last hole
-      // so the next hole button should finish the game.
-      const holeIndex = prevValue.currentGame.holeList.findIndex((h) => h.id === holeId);
+      // If it's the last hole, add a new one
+      if (holeIndex === prevValue.currentGame.holeList.length - 1) {
+        const lastHole = prevValue.currentGame.holeList[holeIndex];
+        const newHole = {
+          ...lastHole,
+          id: generateRandomId(),
+          hole: lastHole.hole + 1,
+          isActive: true,
+        };
 
-      if (holeIndex < prevValue.currentGame.holeList.length - 1) {
-        const nextHoleId = prevValue.currentGame.holeList[holeIndex + 1].id;
-
-        const element = document.getElementById("hole-" + nextHoleId);
-
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
+        updatedHoleList.push(newHole);
       }
+
+      // Update the holeIndexRef for scrolling purposes in the useEffect hook - holeList replacing causes it to trigger
+      // Could possibly update currentHoleIndex outsite of this state updating but the problem is preventing 
+      // all the GameHoles from re-rendering since this function should be recreated when currentGame.holeList is updated
+      holeIndexRef.current = holeIndex + 1;
 
       return {
         ...prevValue,
@@ -534,13 +540,17 @@ const RunningGame = (props: RunningGameProps) => {
     setCurrentHoleIndex(+e.target.value - 1);
   };
 
-  // Side effect of currentHoleIndex changes is defined here
+  // Side effect of currentHoleIndex changes is defined here, scrollFromButton ref is used to prevent
+  // onScrollEnd event from affecting this hook
   useEffect(() => {
-    if (!scrollFromButton.current) return;
+    if (!scrollFromButton.current && !holeIndexRef.current) return;
 
-    const holeId = currentGame.holeList[currentHoleIndex].id;
+    const hole = currentGame.holeList[holeIndexRef.current ?? currentHoleIndex];
+    holeIndexRef.current = null;
 
-    const element = document.getElementById("hole-" + holeId);
+    if (!hole) return;
+
+    const element = document.getElementById("hole-" + hole.id);
 
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -626,16 +636,18 @@ const RunningGame = (props: RunningGameProps) => {
         </div>
       </div>
       <div>
-        <button onClick={handleScrollPreviousHole}>previous</button>
-        <select
-          onChange={handleHoleOptionSelect}
-          value={currentHoleIndex + 1}
-        >
-          {currentGame.holeList.map((h) => (
-            <option key={h.id}>{h.hole}</option>
-          ))}
-        </select>
-        <button onClick={handleScrollNextHole}>next</button>
+        <div>
+          <button onClick={handleScrollPreviousHole}>previous</button>
+          <select
+            onChange={handleHoleOptionSelect}
+            value={currentHoleIndex + 1}
+          >
+            {currentGame.holeList.map((h) => (
+              <option key={h.id}>{h.hole}</option>
+            ))}
+          </select>
+          <button onClick={handleScrollNextHole}>next</button>
+        </div>
         <ul
           className={styles["running-game--hole-list"]}
           ref={holeListRef}
