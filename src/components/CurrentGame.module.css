@@ -137,6 +137,10 @@
   flex: 0 0 auto;
 }
 
+.running-game--hole-info.disabled > :not(.running-game--hole-info--finish-game--container) {
+  filter: brightness(0.5);
+}
+
 .running-game--hole-players--container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

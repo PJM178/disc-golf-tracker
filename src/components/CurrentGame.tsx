@@ -313,7 +313,7 @@ interface GameHoleProps extends Hole {
 const GameHole = memo(function GameHole(props: GameHoleProps) {
   console.log(props);
   return (
-    <li className={styles["running-game--hole-info"]} id={"hole-" + props.id}>
+    <li className={`${styles["running-game--hole-info"]} ${!props.isActive ? styles["disabled"] : ""}`.trim()} id={"hole-" + props.id}>
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
       {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>}
       <div className={styles["running-game--hole-players--container"]}>
@@ -329,7 +329,7 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
             <div className={styles["running-game--hole-players--buttons--container"]}>
               <div
                 className={styles["running-game--hole-players--buttons--button"]}
-                onClick={() => props.handleHolePlayerScore("inc", props.id, p.id)}
+                onClick={!props.isActive ? undefined : () => props.handleHolePlayerScore("inc", props.id, p.id)}
               >
                 <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
                   arrow_circle_up
@@ -337,7 +337,7 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
               </div>
               <div
                 className={`${styles["running-game--hole-players--buttons--button"]} ${p.totalScore === 0 ? styles["disabled"] : ""}`.trim()}
-                onClick={p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id)}
+                onClick={!props.isActive ? undefined : p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id)}
               >
                 <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
                   arrow_circle_down
