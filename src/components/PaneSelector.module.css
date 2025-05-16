@@ -4,13 +4,15 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .pane-selector--symbol-container {
   display: flex;
   padding: calc(var(--padding) + 1rem);
   position: relative;
+  flex-grow: 1;
+  justify-content: center;
 }
 
 .pane-selector--symbol-container:global(.selected)::after {
