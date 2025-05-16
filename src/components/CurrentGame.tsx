@@ -509,7 +509,11 @@ const RunningGame = (props: RunningGameProps) => {
       // Update the holeIndexRef for scrolling purposes in the useEffect hook - holeList replacing causes it to trigger
       // Could possibly update currentHoleIndex outsite of this state updating but the problem is preventing 
       // all the GameHoles from re-rendering since this function should be recreated when currentGame.holeList is updated
-      holeIndexRef.current = holeIndex + 1;
+      if (prevValue.currentGame.holeList[holeIndex].isActive) {
+        holeIndexRef.current = holeIndex + 1;
+      } else {
+        holeIndexRef.current = null;
+      }
 
       return {
         ...prevValue,
