@@ -492,10 +492,15 @@ const RunningGame = (props: RunningGameProps) => {
       if (holeIndex === prevValue.currentGame.holeList.length - 1) {
         const lastHole = prevValue.currentGame.holeList[holeIndex];
         const newHole = {
-          ...lastHole,
           id: generateRandomId(),
           hole: lastHole.hole + 1,
           isActive: true,
+          scores: lastHole.scores.map((s) => {
+            const clonedPlayer = { ...s };
+            clonedPlayer.totalScore = 0;
+
+            return clonedPlayer;
+          }),
         };
 
         updatedHoleList.push(newHole);
