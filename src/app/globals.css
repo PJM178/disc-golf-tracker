@@ -59,7 +59,7 @@
 
 :root[data-theme="dark"] {
   /* Contrast to fill at least 4.5:1 */
-  --brand: hsl(230, 95.2%, 79.2%);
+  --brand: hsl(230, 94%, 79%);
   /* Contrast to fill at least 4.5:1 */
   --text-strong: hsl(230, 0%, 100%);
   /* Contrast to fill at least 4.5:1 */

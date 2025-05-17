@@ -3,7 +3,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
-import { Switch } from "./Buttons";
+import { Button, Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
 import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
@@ -359,6 +359,21 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
             check_circle
           </span>
         </div>
+        <Button
+          onClick={() => props.handleFinishHole(props.id)}
+          variant="tertiary"
+          endIcon={
+            <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+              check_circle
+            </span>
+          }
+        >
+          <div
+            className={styles["running-game--hole-info--finish-game--button"]}
+          >
+            <span>Reikä valmis</span>
+          </div>
+        </Button>
       </div>
     </li>
   );

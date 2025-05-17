@@ -1,20 +1,87 @@
-.primary-button {
-  border-radius: 5px;
+.button--icon {
   display: flex;
-  align-items: center;
+  color: inherit;
+  /* or set to specific color like var(--text-default) */
+  text-decoration: none;
+  text-underline-offset: initial;
 }
 
-.primary-button svg {
-  fill: currentColor;
+.button--base {
+  display: flex;
 }
 
-.primary-button:hover {
+.button--wrapper {
+  border: none;
+  padding: 0;
+  background: none;
+  font: inherit;
+  text-align: inherit;
+  cursor: inherit;
+  appearance: none;
+}
+
+.button--primary {
+  background-color: var(--brand);
+  border-radius: 5px;
+  border: 0;
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--brand);
+}
+
+.button--primary * {
+  color: var(--background);
+}
+
+.button--primary:hover {
+  cursor: pointer;
+}
+
+.button--secondary {
+  background-color: transparent;
+  border-radius: 5px;
+  border: 0;
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--brand);
+}
+
+.button--secondary * {
+  color: var(--brand);
+}
+
+.button--primary:hover {
+  cursor: pointer;
+}
+
+.button--tertiary {
+  background-color: transparent;
+  border: 0;
+  border-radius: 5px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: transparent;
+}
+
+.button--tertiary * {
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.button--tertiary .button--icon,
+.button--tertiary .button--icon * {
+  text-decoration: none;
+}
+
+.button--tertiary:hover {
   cursor: pointer;
 }
 
 .primary-button--disabled.primary-button--filled {
   background-color: var(--stroke-weak) !important;
-  border-color: var(--stroke-weak) !important;;
+  border-color: var(--stroke-weak) !important;
+  ;
   pointer-events: none;
 }
 
@@ -150,7 +217,7 @@
 }
 
 .switch--tack-container.active {
-  transform: translateX(14px);  
+  transform: translateX(14px);
 }
 
 .switch--tack {

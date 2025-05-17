@@ -1,36 +1,45 @@
 import styles from "./Buttons.module.css";
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant: "text" | "outlined" | "filled";
-  disabled?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  startIcon?: React.ReactNode;
+  variant: ButtonVariants;
   endIcon?: React.ReactNode;
-  className?: string;
+  startIcon?: React.ReactNode;
 }
 
+type ButtonVariants = "primary" | "secondary" | "tertiary" | "wrapper";
+
 export const Button = (props: ButtonProps) => {
-  const { children, variant, disabled, onClick, startIcon, endIcon, className } = props;
+  const { children, variant, className, startIcon, endIcon, ...rest } = props;
 
   const buttonStyles = {
-    base: `${styles[`primary-button`]}`,
-    variant: `${styles[`primary-button--${variant}`]}`,
-    disabled: disabled ? `${styles[`primary-button--disabled`]}` : null,
-    className: className,
-  };
+    primary: styles["button--primary"],
+    secondary: styles["button--secondary"],
+    tertiary: styles["button--tertiary"],
+    wrapper: styles["button--wrapper"],
+  }
+
+  if (variant === "wrapper") {
+    return (
+      <button
+        className={`${buttonStyles[variant]} ${className}`.trim()}
+        {...rest}
+      >
+        {children}
+      </button>
+    );
+  }
 
   return (
     <button
-      className={Object.values(buttonStyles).join(" ").trim()}
-      disabled={disabled}
-      onClick={onClick}
+      className={`${styles["button--base"]} ${buttonStyles[variant]}`.trim()}
+      {...rest}
     >
       {startIcon &&
-        <span className={`${styles["primary-button--icon"]} ${styles["start"]}`}>{startIcon}</span>}
+        <span className={styles["button--icon"]}>{startIcon}</span>}
       {children}
       {endIcon &&
-        <span className={`${styles["primary-button--icon"]} ${styles["end"]}`}>{endIcon}</span>}
+        <span className={styles["button--icon"]}>{endIcon}</span>}
     </button>
   );
 };
@@ -83,7 +92,7 @@ export const Switch = (props: SwitchProps) => {
 
   return (
     <span
-      className={`${styles["switch--container"]}${disabled ? ` ${styles["disabled"]}`: ""}`}
+      className={`${styles["switch--container"]}${disabled ? ` ${styles["disabled"]}` : ""}`}
       onClick={!disabled ? onClick : undefined}
       onKeyDown={!disabled ? handleKeyDown : undefined}
       role="switch"
@@ -95,7 +104,7 @@ export const Switch = (props: SwitchProps) => {
     >
       <span className={handleStyles("tack-container")}>
         <span className={handleStyles("tack")} />
-        <span className={`${styles["switch--tack-border"]}${disabled ? ` ${styles["disabled"]}`: ""}`} />
+        <span className={`${styles["switch--tack-border"]}${disabled ? ` ${styles["disabled"]}` : ""}`} />
       </span>
       <span className={handleStyles("background")} />
     </span>
