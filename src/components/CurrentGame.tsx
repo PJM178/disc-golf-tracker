@@ -304,7 +304,7 @@ const NewGame = () => {
 };
 
 interface GameHoleProps extends Hole {
-  currentHole: string;
+  // currentHole: string;
   handleHolePlayerScore: (dir: "inc" | "dec", holeId: string, playerId: string) => void;
   handleFinishHole: (holeId: string) => void;
 }
@@ -315,7 +315,7 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
   return (
     <li className={`${styles["running-game--hole-info"]} ${!props.isActive ? styles["disabled"] : ""}`.trim()} id={"hole-" + props.id}>
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
-      {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>}
+      {/* {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>} */}
       <div className={styles["running-game--hole-players--container"]}>
         <div className={styles["running-game--hole-players--grid-header"]}>
           <div>Pelaaja</div>
@@ -534,7 +534,7 @@ const RunningGame = (props: RunningGameProps) => {
         ...prevValue,
         currentGame: {
           ...prevValue.currentGame,
-          currentHole: "hrewknma",
+          currentHole: prevValue.currentGame.holeList[holeIndex].id,
           holeList: updatedHoleList,
         },
       };
@@ -578,8 +578,18 @@ const RunningGame = (props: RunningGameProps) => {
 
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      setGameState((prevValue) => {
+        if (prevValue.currentGame) {
+          prevValue.currentGame.currentHole = hole.id;
+
+          return { ...prevValue };
+        }
+
+        return prevValue;
+      });
     }
-  }, [currentHoleIndex, currentGame.holeList]);
+  }, [currentHoleIndex, currentGame.holeList, setGameState]);
 
   // Scroll into view the closest child node when the scrolling ends
   const handleULOnScrollEnd = (e: React.UIEvent<HTMLUListElement, UIEvent>) => {
@@ -611,6 +621,19 @@ const RunningGame = (props: RunningGameProps) => {
 
             if (element) {
               element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+              setGameState((prevValue) => {
+                if (prevValue.currentGame) {
+                  if (holeListChildrenWidths.current && prevValue.currentGame.currentHole !== holeListChildrenWidths.current[i].id) {
+                    prevValue.currentGame.currentHole = holeListChildrenWidths.current[i].id;
+
+                    return { ...prevValue };
+                  }
+                }
+
+                return prevValue;
+              });
+
               setCurrentHoleIndex(i);
 
               return;
@@ -623,6 +646,19 @@ const RunningGame = (props: RunningGameProps) => {
 
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+            setGameState((prevValue) => {
+              if (prevValue.currentGame) {
+                if (holeListChildrenWidths.current && prevValue.currentGame.currentHole !== holeListChildrenWidths.current[i + 1].id) {
+                  prevValue.currentGame.currentHole = holeListChildrenWidths.current[i + 1].id;
+
+                  return { ...prevValue };
+                }
+              }
+
+              return prevValue;
+            });
+
             setCurrentHoleIndex(i + 1);
 
             return;
@@ -633,6 +669,19 @@ const RunningGame = (props: RunningGameProps) => {
 
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+          setGameState((prevValue) => {
+            if (prevValue.currentGame) {
+              if (holeListChildrenWidths.current && prevValue.currentGame.currentHole !== holeListChildrenWidths.current[i].id) {
+                prevValue.currentGame.currentHole = holeListChildrenWidths.current[i].id.split("-")[1];
+
+                return { ...prevValue };
+              }
+            }
+
+            return prevValue;
+          });
+
           setCurrentHoleIndex(i);
 
           return;
@@ -681,7 +730,7 @@ const RunningGame = (props: RunningGameProps) => {
             <GameHole
               key={hole.id}
               {...hole}
-              currentHole={props.currentGame.currentHole}
+              // currentHole={props.currentGame.currentHole}
               handleHolePlayerScore={handleHolePlayerScore}
               handleFinishHole={handleFinishHole}
             />
