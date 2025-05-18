@@ -416,7 +416,7 @@ const RunningGame = (props: RunningGameProps) => {
     const element = document.getElementById("hole-" + currentGame.currentHole);
 
     if (element) {
-      element.scrollIntoView({ behavior: "auto" });
+      element.scrollIntoView({ behavior: "auto", block: "nearest" });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -577,7 +577,7 @@ const RunningGame = (props: RunningGameProps) => {
     const element = document.getElementById("hole-" + hole.id);
 
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }, [currentHoleIndex, currentGame.holeList]);
 
@@ -610,7 +610,7 @@ const RunningGame = (props: RunningGameProps) => {
             const element = document.getElementById(holeListChildrenWidths.current[i].id);
 
             if (element) {
-              element.scrollIntoView({ behavior: "smooth" });
+              element.scrollIntoView({ behavior: "smooth", block: "nearest" });
               setCurrentHoleIndex(i);
 
               return;
@@ -622,7 +622,7 @@ const RunningGame = (props: RunningGameProps) => {
           const element = document.getElementById(holeListChildrenWidths.current[i + 1].id);
 
           if (element) {
-            element.scrollIntoView({ behavior: "smooth" });
+            element.scrollIntoView({ behavior: "smooth", block: "nearest" });
             setCurrentHoleIndex(i + 1);
 
             return;
@@ -632,7 +632,7 @@ const RunningGame = (props: RunningGameProps) => {
         const element = document.getElementById(holeListChildrenWidths.current[i].id);
 
         if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
+          element.scrollIntoView({ behavior: "smooth", block: "nearest" });
           setCurrentHoleIndex(i);
 
           return;
