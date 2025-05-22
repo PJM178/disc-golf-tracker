@@ -1,0 +1,36 @@
+.running-game--hole-players--container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.running-game--hole-players--grid-header {
+  display: contents;
+}
+
+.running-game--hole-players--player {
+  display: contents;
+}
+
+.running-game--hole-players--player--name {
+  display: flex;
+  align-items: center;
+}
+
+.running-game--hole-players--player--score {
+  display: flex;
+  align-items: center;
+}
+
+.running-game--hole-players--buttons--container {
+  display: flex;
+  justify-content: center;
+}
+
+.running-game--hole-players--buttons--button {
+  padding: var(--padding);
+  display: flex;
+}
+
+.running-game--hole-players--buttons--button.disabled {
+  filter: brightness(0.3);
+}
