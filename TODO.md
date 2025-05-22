@@ -1,0 +1,1 @@
+Bug when scrolling to next hole and then to previous hole, the game currentHole does not update to the previous hole

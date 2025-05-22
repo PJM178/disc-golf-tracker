@@ -7,6 +7,7 @@ import { Button, Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
 import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
+import PlayerScoreGrid from "./PlayerScoreGrid";
 
 type NewGameType = Omit<Game, "startTime" | "endTime" | "currentHole">;
 
@@ -304,61 +305,27 @@ const NewGame = () => {
 };
 
 interface GameHoleProps extends Hole {
-  // currentHole: string;
   handleHolePlayerScore: (dir: "inc" | "dec", holeId: string, playerId: string) => void;
   handleFinishHole: (holeId: string) => void;
 }
 
-// TODO: Increase and decrease player hole scores, figure out how to display the data in a pleasing way
 const GameHole = memo(function GameHole(props: GameHoleProps) {
   console.log(props);
   return (
     <li className={`${styles["running-game--hole-info"]} ${!props.isActive ? styles["disabled"] : ""}`.trim()} id={"hole-" + props.id}>
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
       {/* {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>} */}
-      <div className={styles["running-game--hole-players--container"]}>
-        <div className={styles["running-game--hole-players--grid-header"]}>
-          <div>Pelaaja</div>
-          <div>pisteet</div>
-          <div />
-        </div>
-        {props.scores.map((p) => (
-          <div key={p.id} className={styles["running-game--hole-players--player"]}>
-            <div className={styles["running-game--hole-players--player--name"]}>{p.name}</div>
-            <div className={styles["running-game--hole-players--player--score"]}>{p.totalScore}</div>
-            <div className={styles["running-game--hole-players--buttons--container"]}>
-              <div
-                className={styles["running-game--hole-players--buttons--button"]}
-                onClick={!props.isActive ? undefined : () => props.handleHolePlayerScore("inc", props.id, p.id)}
-              >
-                <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
-                  arrow_circle_up
-                </span>
-              </div>
-              <div
-                className={`${styles["running-game--hole-players--buttons--button"]} ${p.totalScore === 0 ? styles["disabled"] : ""}`.trim()}
-                onClick={!props.isActive ? undefined : p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id)}
-              >
-                <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
-                  arrow_circle_down
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <PlayerScoreGrid
+        hasButtons={true}
+        handleHolePlayerScore={props.handleHolePlayerScore}
+        scores={props.scores}
+        id={props.id}
+        isActive={props.isActive}
+        hole={props.hole}
+      />
       <div
         className={styles["running-game--hole-info--finish-game--container"]}
       >
-        <div
-          className={styles["running-game--hole-info--finish-game--button"]}
-          onClick={() => props.handleFinishHole(props.id)}
-        >
-          <span>Reikä valmis</span>
-          <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
-            check_circle
-          </span>
-        </div>
         <Button
           onClick={() => props.handleFinishHole(props.id)}
           variant="tertiary"
@@ -690,7 +657,7 @@ const RunningGame = (props: RunningGameProps) => {
     }
   };
 
-  // Update the holeListChildrenWidths here when currentGame holeList array changes
+  // Update the holeListChildrenWidths here when currentGame holeList array changes - it's for caching purposes
   useEffect(() => {
     holeListChildrenWidths.current = null;
   }, [currentGame.holeList.length]);
@@ -730,7 +697,6 @@ const RunningGame = (props: RunningGameProps) => {
             <GameHole
               key={hole.id}
               {...hole}
-              // currentHole={props.currentGame.currentHole}
               handleHolePlayerScore={handleHolePlayerScore}
               handleFinishHole={handleFinishHole}
             />
