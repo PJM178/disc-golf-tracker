@@ -120,9 +120,25 @@
 
 .running-game--game-info {
   display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.running-game--game-name-container {
+  display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+}
+
+.running-game--game-info-container {
+  position: relative;
+}
+
+.running-game--game-info-settings {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 .running-game--hole-list {

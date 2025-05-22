@@ -1,6 +1,7 @@
 .running-game--hole-players--container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  word-break: break-word;
 }
 
 .running-game--hole-players--grid-header {
@@ -21,14 +22,20 @@
   align-items: center;
 }
 
+.running-game--hole-players--leading-player {
+  color: var(--leading-player-score-color)
+}
+
 .running-game--hole-players--buttons--container {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .running-game--hole-players--buttons--button {
   padding: var(--padding);
   display: flex;
+  align-items: center;
 }
 
 .running-game--hole-players--buttons--button.disabled {

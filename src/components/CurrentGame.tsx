@@ -1,11 +1,11 @@
 "use client"
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Button, Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
-import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
+import { Game, GameState, useGameState, Hole, Player } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
 import PlayerScoreGrid from "./PlayerScoreGrid";
 
@@ -346,6 +346,24 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
   );
 });
 
+interface GameInfoProps {
+  currentGamePlayers: Game["players"];
+};
+
+const GameInfo = memo(function GameInfo(props: GameInfoProps) {
+  const playerWithLowestScore = useMemo(() => props.currentGamePlayers.reduce((lowest, player) => (
+    player.totalScore < lowest.totalScore ? player : lowest
+  )), [props.currentGamePlayers]);
+
+  return (
+    <PlayerScoreGrid
+      hasButtons={false}
+      scores={props.currentGamePlayers}
+      leadingPlayer={playerWithLowestScore}
+    />
+  );
+});
+
 interface RunningGameProps {
   currentGame: Game;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>
@@ -354,6 +372,7 @@ interface RunningGameProps {
 const RunningGame = (props: RunningGameProps) => {
   const { currentGame, setGameState } = props;
   const [confirmDialog, setConfirmDialog] = useState(false);
+  const [gameMoreInfoOpen, setGameMoreInfoOpen] = useState(false);
   const holeListRef = useRef<HTMLUListElement>(null);
   const holeListChildrenWidths = useRef<{ width: number, id: string }[]>(null);
   const [currentHoleIndex, setCurrentHoleIndex] = useState(() => {
@@ -665,15 +684,32 @@ const RunningGame = (props: RunningGameProps) => {
   return (
     <>
       <div className={styles["running-game--game-info"]}>
-        <h2>{props.currentGame.name}</h2>
         <div
-          className={styles["new-game-form--title-symbol--container"]}
-          onClick={() => setConfirmDialog(true)}
+          className={styles["running-game--game-name-container"]}
+          onClick={() => setGameMoreInfoOpen((prevValue) => !prevValue)}
         >
+          <h2>{props.currentGame.name}</h2>
           <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-            settings
+            keyboard_arrow_down
           </span>
         </div>
+        <div className={styles["running-game--game-info-container"]}>
+          {gameMoreInfoOpen &&
+            <>
+              <GameInfo currentGamePlayers={props.currentGame.players} />
+              <div className={styles["running-game--game-info-settings"]}>
+                <div
+                  className={styles["new-game-form--title-symbol--container"]}
+                  onClick={() => setConfirmDialog(true)}
+                >
+                  <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+                    settings
+                  </span>
+                </div>
+              </div>
+            </>}
+        </div>
+
       </div>
       <div>
         <div>

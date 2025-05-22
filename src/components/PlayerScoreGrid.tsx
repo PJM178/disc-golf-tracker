@@ -1,4 +1,4 @@
-import { Game, Hole } from "@/context/GameStateContext";
+import { Game, Hole, Player } from "@/context/GameStateContext";
 import styles from "./PlayerScoreGrid.module.css"
 
 interface BasePlayerScoreGridProps {
@@ -12,9 +12,10 @@ interface PlayerScoreGridWithButtons extends BasePlayerScoreGridProps, Hole {
 
 interface PlayerScoreGridWithoutButtons extends BasePlayerScoreGridProps {
   hasButtons: false;
+  leadingPlayer: Player;
 }
 
-type PlayerScoreGridProps = PlayerScoreGridWithButtons | PlayerScoreGridWithoutButtons;
+export type PlayerScoreGridProps = PlayerScoreGridWithButtons | PlayerScoreGridWithoutButtons;
 
 const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
   return (
@@ -35,6 +36,13 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
               className={styles["running-game--hole-players--buttons--button"]}
               onClick={props.hasButtons ? !props.isActive ? undefined : () => props.handleHolePlayerScore("inc", props.id, p.id) : undefined}
             >
+              {!props.hasButtons && props.leadingPlayer.id === p.id ?
+                <span
+                  className={styles["running-game--hole-players--leading-player"]}
+                >
+                  Johtaa
+                </span> :
+                null}
               <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
                 {props.hasButtons ? "arrow_circle_up" : ""}
               </span>
