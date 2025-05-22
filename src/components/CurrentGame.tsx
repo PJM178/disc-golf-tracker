@@ -616,8 +616,8 @@ const RunningGame = (props: RunningGameProps) => {
 
             setGameState((prevValue) => {
               if (prevValue.currentGame) {
-                if (holeListChildrenWidths.current && prevValue.currentGame.currentHole !== holeListChildrenWidths.current[i].id.split("-")[1]) {
-                  prevValue.currentGame.currentHole = holeListChildrenWidths.current[i].id.split("-")[1];
+                if (holeListChildrenWidths.current && prevValue.currentGame.currentHole !== holeListChildrenWidths.current[i + 1].id.split("-")[1]) {
+                  prevValue.currentGame.currentHole = holeListChildrenWidths.current[i + 1].id.split("-")[1];
 
                   return { ...prevValue };
                 }
