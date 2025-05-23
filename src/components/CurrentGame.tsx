@@ -5,7 +5,7 @@ import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Button, Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
-import { Game, GameState, useGameState, Hole, Player } from "@/context/GameStateContext";
+import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
 import PlayerScoreGrid from "./PlayerScoreGrid";
 

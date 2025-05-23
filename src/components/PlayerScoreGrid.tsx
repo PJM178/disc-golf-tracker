@@ -32,29 +32,31 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
           <div className={styles["running-game--hole-players--player--name"]}>{p.name}</div>
           <div className={styles["running-game--hole-players--player--score"]}>{p.totalScore}</div>
           <div className={styles["running-game--hole-players--buttons--container"]}>
-            <div
-              className={styles["running-game--hole-players--buttons--button"]}
-              onClick={props.hasButtons ? !props.isActive ? undefined : () => props.handleHolePlayerScore("inc", props.id, p.id) : undefined}
-            >
-              {!props.hasButtons && props.leadingPlayer.id === p.id ?
-                <span
-                  className={styles["running-game--hole-players--leading-player"]}
+            {props.hasButtons ?
+              <>
+                <div
+                  className={styles["running-game--hole-players--buttons--button"]}
+                  onClick={!props.isActive ? undefined : () => props.handleHolePlayerScore("inc", props.id, p.id)}
                 >
-                  Johtaa
-                </span> :
-                null}
-              <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
-                {props.hasButtons ? "arrow_circle_up" : ""}
-              </span>
-            </div>
-            <div
-              className={`${styles["running-game--hole-players--buttons--button"]} ${p.totalScore === 0 ? styles["disabled"] : ""}`.trim()}
-              onClick={props.hasButtons ? !props.isActive ? undefined : p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id) : undefined}
-            >
-              <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
-                {props.hasButtons ? "arrow_circle_down" : ""}
-              </span>
-            </div>
+
+                  <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+                    arrow_circle_up
+                  </span>
+                </div>
+                <div
+                  className={`${styles["running-game--hole-players--buttons--button"]} ${p.totalScore === 0 ? styles["disabled"] : ""}`.trim()}
+                  onClick={!props.isActive ? undefined : p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id)}
+                >
+                  <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+                    arrow_circle_down
+                  </span>
+                </div>
+              </> : props.leadingPlayer.id === p.id &&
+              <span
+                className={styles["running-game--hole-players--leading-player"]}
+              >
+                Johtaa
+              </span>}
           </div>
         </div>
       ))}
