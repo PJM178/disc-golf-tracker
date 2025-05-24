@@ -52,11 +52,15 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
                   </span>
                 </div>
               </> : props.leadingPlayer.id === p.id &&
-              <span
-                className={styles["running-game--hole-players--leading-player"]}
+              <div
+                className={styles["running-game--hole-players--leading-player--container"]}
               >
-                Johtaa
-              </span>}
+                <span
+                  className={styles["running-game--hole-players--leading-player"]}
+                >
+                  Johtaa
+                </span>
+              </div>}
           </div>
         </div>
       ))}

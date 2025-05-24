@@ -25,7 +25,7 @@
   --success-fill: hsla(162, 90.5%, 25.2%, 0.05);
   --skeleton-loading-background: #e7dcdc;
   --padding: 0.3rem;
-  --leading-player-score-color: #8bc34a;
+  --leading-player-score-color: 139, 195, 74;
 }
 
 :root[data-theme="light"] {
@@ -55,7 +55,7 @@
   --success-fill: hsla(162, 90.5%, 25.2%, 0.05);
   --skeleton-loading-background: #e7dcdc;
   --padding: 0.3rem;
-  --leading-player-score-color: #8bc34a;
+  --leading-player-score-color: 139, 195, 74;
   color-scheme: light;
 }
 
@@ -85,7 +85,7 @@
   --success-fill: hsla(162, 41.5%, 62.4%, 0.05);
   --skeleton-loading-background: rgba(255, 255, 255, 0.13);
   --padding: 0.3rem;
-  --leading-player-score-color: #8bc34a;
+  --leading-player-score-color: 139, 195, 74;
   color-scheme: dark;
 }
 
@@ -116,7 +116,7 @@
     --success-fill: hsla(162, 41.5%, 62.4%, 0.05);
     --skeleton-loading-background: rgba(255, 255, 255, 0.13);
     --padding: 0.3rem;
-    --leading-player-score-color: #8bc34a;
+    --leading-player-score-color: 139, 195, 74;
     color-scheme: dark;
   }
 }
