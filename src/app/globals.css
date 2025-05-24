@@ -239,6 +239,16 @@ header {
   }
 }
 
+.material-symbols-outlined.open {
+  transform: rotate(180deg);
+  transition: transform linear 75ms;
+}
+
+.material-symbols-outlined.closed {
+  transform: rotate(0);
+  transition: transform linear 75ms;
+}
+
 /* Google fonts & Icons - START */
 
 .material-symbols-outlined {
@@ -246,7 +256,8 @@ header {
     'FILL' 1,
     'wght' 400,
     'GRAD' 0,
-    'opsz' 24
+    'opsz' 24;
+  transform-origin: center;
 }
 
 .material-symbols-outlined--not-filled {

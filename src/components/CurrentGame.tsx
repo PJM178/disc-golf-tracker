@@ -689,7 +689,7 @@ const RunningGame = (props: RunningGameProps) => {
           onClick={() => setGameMoreInfoOpen((prevValue) => !prevValue)}
         >
           <h2>{props.currentGame.name}</h2>
-          <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+          <span className={`material-symbol--container material-symbols-outlined ${gameMoreInfoOpen ? "open" : "closed"}`.trim()}>
             keyboard_arrow_down
           </span>
         </div>
