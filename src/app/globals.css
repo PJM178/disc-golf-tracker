@@ -25,7 +25,7 @@
   --success-fill: hsla(162, 90.5%, 25.2%, 0.05);
   --skeleton-loading-background: #e7dcdc;
   --padding: 0.3rem;
-  --leading-player-score-color: 139, 195, 74;
+  --leading-player-score-color: 0, 100, 0;
 }
 
 :root[data-theme="light"] {
@@ -55,7 +55,7 @@
   --success-fill: hsla(162, 90.5%, 25.2%, 0.05);
   --skeleton-loading-background: #e7dcdc;
   --padding: 0.3rem;
-  --leading-player-score-color: 139, 195, 74;
+  --leading-player-score-color: 0, 100, 0;
   color-scheme: light;
 }
 
