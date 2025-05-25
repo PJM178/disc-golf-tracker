@@ -10,6 +10,25 @@
   display: flex;
 }
 
+.button--base:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.button--base:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.button--base:active {
+  opacity: 1;
+}
+
+.button--base:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
 .button--wrapper {
   border: none;
   padding: 0;
@@ -22,19 +41,16 @@
 
 .button--primary {
   background-color: var(--brand);
-  border-radius: 5px;
+  border-radius: 10px;
   border: 0;
   border-width: 2px;
   border-style: solid;
   border-color: var(--brand);
+  padding: 0.5rem;
 }
 
 .button--primary * {
   color: var(--background);
-}
-
-.button--primary:hover {
-  cursor: pointer;
 }
 
 .button--secondary {
@@ -48,10 +64,6 @@
 
 .button--secondary * {
   color: var(--brand);
-}
-
-.button--primary:hover {
-  cursor: pointer;
 }
 
 .button--tertiary {
@@ -72,10 +84,6 @@
 .button--tertiary .button--icon,
 .button--tertiary .button--icon * {
   text-decoration: none;
-}
-
-.button--tertiary:hover {
-  cursor: pointer;
 }
 
 .primary-button--disabled.primary-button--filled {

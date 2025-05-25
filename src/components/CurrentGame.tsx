@@ -683,14 +683,17 @@ const RunningGame = (props: RunningGameProps) => {
 
   return (
     <>
-      <div className={styles["running-game--game-info"]}>
+      <div
+        className={styles["running-game--game-info"]}
+        style={{ gap: gameMoreInfoOpen ? "0.25rem" : "unset" }}
+      >
         <div
           className={styles["running-game--game-name-container"]}
           onClick={() => setGameMoreInfoOpen((prevValue) => !prevValue)}
         >
           <h2>{props.currentGame.name}</h2>
-          <span className={`material-symbol--container material-symbols-outlined ${gameMoreInfoOpen ? "open" : "closed"}`.trim()}>
-            keyboard_arrow_down
+          <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+            {!gameMoreInfoOpen ? "expand_content" : "collapse_content"}
           </span>
         </div>
         <div className={styles["running-game--game-info-container"]}>
@@ -698,14 +701,12 @@ const RunningGame = (props: RunningGameProps) => {
             <>
               <GameInfo currentGamePlayers={props.currentGame.players} />
               <div className={styles["running-game--game-info-settings"]}>
-                <div
-                  className={styles["new-game-form--title-symbol--container"]}
+                <Button
+                  variant="primary"
                   onClick={() => setConfirmDialog(true)}
                 >
-                  <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-                    settings
-                  </span>
-                </div>
+                  <span>Lopeta peli</span>
+                </Button>
               </div>
             </>}
         </div>
@@ -740,8 +741,9 @@ const RunningGame = (props: RunningGameProps) => {
         </ul>
       </div>
       <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
-        <button onClick={() => setConfirmDialog(false)}>no</button>
-        <button onClick={handleFinishGame}>yes</button>
+        <span>Lopeta peli?</span>
+        <button onClick={() => setConfirmDialog(false)}>Ei</button>
+        <button onClick={handleFinishGame}>Kyllä</button>
       </Dialog>
     </>
   );

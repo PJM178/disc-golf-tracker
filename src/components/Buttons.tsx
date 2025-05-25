@@ -3,6 +3,7 @@ import styles from "./Buttons.module.css";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant: ButtonVariants;
+  disabled?: boolean;
   endIcon?: React.ReactNode;
   startIcon?: React.ReactNode;
 }
@@ -10,7 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 type ButtonVariants = "primary" | "secondary" | "tertiary" | "wrapper";
 
 export const Button = (props: ButtonProps) => {
-  const { children, variant, className, startIcon, endIcon, ...rest } = props;
+  const { children, variant, className, startIcon, endIcon, disabled, ...rest } = props;
 
   const buttonStyles = {
     primary: styles["button--primary"],
@@ -23,6 +24,7 @@ export const Button = (props: ButtonProps) => {
     return (
       <button
         className={`${buttonStyles[variant]} ${className}`.trim()}
+        disabled={disabled}
         {...rest}
       >
         {children}
@@ -33,6 +35,7 @@ export const Button = (props: ButtonProps) => {
   return (
     <button
       className={`${styles["button--base"]} ${buttonStyles[variant]}`.trim()}
+      disabled={disabled}
       {...rest}
     >
       {startIcon &&
