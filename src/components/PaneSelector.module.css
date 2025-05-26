@@ -16,6 +16,12 @@
   align-items: center;
   flex-direction: column;
   gap: 0.1rem;
+  width: 100%;
+}
+
+.pane-selector--button {
+  flex-grow: 1 !important;
+  background-color: var(--background);
 }
 
 .pane-selector--symbol-container:global(.selected)::after {

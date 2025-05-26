@@ -12,27 +12,35 @@ const PaneSelector = (props: PaneSelectorProps) => {
     <nav className={styles["pane-selector--container"]}>
       <Button
         variant="wrapper"
-        className={`${styles["pane-selector--symbol-container"]} ${props.currentPane === "home" ? "selected" : ""}`.trim()}
+        className={`${styles["pane-selector--button"]}`.trim()}
         onClick={() => props.setCurrentPane("home")}
       >
-        <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
-          home
-        </span>
-        <span>
-          Nykyinen
-        </span>
+        <div
+          className={`${styles["pane-selector--symbol-container"]} ${props.currentPane === "home" ? "selected" : ""}`.trim()}
+        >
+          <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+            home
+          </span>
+          <span>
+            Nykyinen
+          </span>
+        </div>
       </Button>
       <Button
         variant="wrapper"
-        className={`${styles["pane-selector--symbol-container"]} ${props.currentPane === "history" ? "selected" : ""}`.trim()}
+        className={`${styles["pane-selector--button"]}`.trim()}
         onClick={() => props.setCurrentPane("history")}
       >
-        <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-          history
-        </span>
-        <span>
-          Historia
-        </span>
+        <div
+          className={`${styles["pane-selector--symbol-container"]} ${props.currentPane === "history" ? "selected" : ""}`.trim()}
+        >
+          <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+            history
+          </span>
+          <span>
+            Historia
+          </span>
+        </div>
       </Button>
     </nav >
   );
