@@ -744,8 +744,18 @@ const RunningGame = (props: RunningGameProps) => {
         <div className={styles["running-game--game-info-settings--dialog-content"]}>
           <span>Lopeta peli?</span>
           <div className={styles["running-game--game-info-settings--dialog-content--buttons"]}>
-            <button onClick={() => setConfirmDialog(false)}>Ei</button>
-            <button onClick={handleFinishGame}>Kyllä</button>
+            <Button
+              onClick={handleFinishGame}
+              variant="primary"
+            >
+              <span>Kyllä</span>
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setConfirmDialog(false)}
+            >
+              <span>Ei</span>
+            </Button>
           </div>
         </div>
       </Dialog>

@@ -150,6 +150,7 @@
 
 .running-game--game-info-settings--dialog-content--buttons {
   display: flex;
+  gap: 0.5rem;
 }
 
 .running-game--hole-list {

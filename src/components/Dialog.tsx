@@ -28,6 +28,8 @@ const Dialog = (props: DialogProps) => {
     closeModal();
   };
 
+  // Make root element inert - this element is outside of it in body - for accessibility to, e.g., making elements in root
+  // not focusable by tabbing 
   useEffect(() => {
     const element = document.getElementById("root");
 
@@ -43,6 +45,7 @@ const Dialog = (props: DialogProps) => {
     };
   }, [isOpen]);
 
+  // Add event listener to close the Dialog on Escape key
   useEffect(() => {
     if (!isOpen) return;
     
