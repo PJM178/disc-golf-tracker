@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 import styles from "./Dialog.module.css";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface DialogProps {
   children: React.ReactNode;
@@ -13,6 +13,7 @@ interface DialogProps {
 // to have transitions finish always but it's also possible that it's better that 
 // in certain cases it closes instantly but this could also be controlled internally
 const Dialog = (props: DialogProps) => {
+  const { children, isOpen, closeModal, containerClassname } = props;
   const backdropRef = useRef<HTMLDivElement>(null);
   const dialogContainerRef = useRef<HTMLDivElement>(null);
 
@@ -24,10 +25,39 @@ const Dialog = (props: DialogProps) => {
   }
 
   const handleOnTransitionEnd = () => {
-    props.closeModal();
+    closeModal();
   };
 
-  if (props.isOpen) {
+  useEffect(() => {
+    const element = document.getElementById("root");
+
+    if (isOpen) {
+      element?.setAttribute("inert", "true");
+    } else {
+      element?.removeAttribute("inert");
+    }
+
+    return () => {
+      const element = document.getElementById("root");
+      element?.removeAttribute("inert");
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, closeModal]);
+
+  if (isOpen) {
     return createPortal(
       <div className={styles["container"]}>
         <div
@@ -35,13 +65,14 @@ const Dialog = (props: DialogProps) => {
           className={styles["backdrop"]}
           onClick={handleCloseModal}
           onTransitionEnd={handleOnTransitionEnd}
+          onKeyDown={(e) => console.log(e)}
         />
         <div
           ref={dialogContainerRef}
-          className={`${styles["dialog-content--container"]} ${props.containerClassname ?? ""}`.trim()}
+          className={`${styles["dialog-content--container"]} ${containerClassname ?? ""}`.trim()}
         >
           <div className={styles["dialog-content--content"]}>
-            {props.children}
+            {children}
           </div>
         </div>
       </div>,

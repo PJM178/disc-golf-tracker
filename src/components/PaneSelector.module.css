@@ -28,3 +28,9 @@
   background-color: var(--brand);
   z-index: 1;
 }
+
+@media only screen and (min-width: 900px) {
+  .pane-selector--container {
+    position: relative;
+  }
+}

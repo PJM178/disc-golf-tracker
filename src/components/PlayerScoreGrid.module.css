@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   word-break: break-word;
+  gap: 0.3rem;
 }
 
 .running-game--hole-players--grid-header {

@@ -16,14 +16,12 @@
 }
 
 .dialog-content--container {
-  border: solid rgba(128, 128, 128, 1) 2px;
+  border: solid var(--stroke-weak) 2px;
   border-radius: 5px;
   padding: 1rem;
   z-index: 1;
   overflow: hidden;
   opacity: 1;
   transition: opacity 50ms linear;
-}
-
-.dialog-content--content {
+  background-color: var(--background);
 }

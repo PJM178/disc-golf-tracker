@@ -741,9 +741,13 @@ const RunningGame = (props: RunningGameProps) => {
         </ul>
       </div>
       <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
-        <span>Lopeta peli?</span>
-        <button onClick={() => setConfirmDialog(false)}>Ei</button>
-        <button onClick={handleFinishGame}>Kyllä</button>
+        <div className={styles["running-game--game-info-settings--dialog-content"]}>
+          <span>Lopeta peli?</span>
+          <div className={styles["running-game--game-info-settings--dialog-content--buttons"]}>
+            <button onClick={() => setConfirmDialog(false)}>Ei</button>
+            <button onClick={handleFinishGame}>Kyllä</button>
+          </div>
+        </div>
       </Dialog>
     </>
   );

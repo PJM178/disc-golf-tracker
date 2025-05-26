@@ -142,6 +142,16 @@
   display: flex;
 }
 
+.running-game--game-info-settings--dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.running-game--game-info-settings--dialog-content--buttons {
+  display: flex;
+}
+
 .running-game--hole-list {
   display: flex;
   overflow: auto;
@@ -152,6 +162,7 @@
   width: 100%;
   flex-direction: column;
   flex: 0 0 auto;
+  margin: 0 1px 0 0;
 }
 
 .running-game--hole-info.disabled > :not(.running-game--hole-info--finish-game--container) {
