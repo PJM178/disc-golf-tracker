@@ -16,6 +16,7 @@
 .running-game--hole-players--player--name {
   display: flex;
   align-items: center;
+  min-height: 30px;
 }
 
 .running-game--hole-players--player--score {

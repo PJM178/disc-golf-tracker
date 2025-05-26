@@ -23,7 +23,7 @@ export const Button = (props: ButtonProps) => {
   if (variant === "wrapper") {
     return (
       <button
-        className={`${buttonStyles[variant]} ${className}`.trim()}
+        className={`${className} ${buttonStyles[variant]}`.trim()}
         disabled={disabled}
         {...rest}
       >

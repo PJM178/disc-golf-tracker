@@ -131,6 +131,14 @@
   width: 100%;
 }
 
+.running-game--game-name-container-wrapper:hover {
+  color: var(--brand);
+}
+
+.running-game--game-name-container-wrapper:active {
+  opacity: 0.8;
+}
+
 .running-game--game-info-container {
   position: relative;
   display: flex;
@@ -156,6 +164,18 @@
 .running-game--hole-list {
   display: flex;
   overflow: auto;
+}
+
+.running-game--hole-list--container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.running-game--hole-list--nav-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
 .running-game--hole-info {

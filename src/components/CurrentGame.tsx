@@ -687,15 +687,20 @@ const RunningGame = (props: RunningGameProps) => {
         className={styles["running-game--game-info"]}
         style={{ gap: gameMoreInfoOpen ? "0.25rem" : "unset" }}
       >
-        <div
-          className={styles["running-game--game-name-container"]}
+        <Button
+          variant="wrapper"
           onClick={() => setGameMoreInfoOpen((prevValue) => !prevValue)}
+          className={styles["running-game--game-name-container-wrapper"]}
         >
-          <h2>{props.currentGame.name}</h2>
-          <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-            {!gameMoreInfoOpen ? "expand_content" : "collapse_content"}
-          </span>
-        </div>
+          <div
+            className={styles["running-game--game-name-container"]}
+          >
+            <h2>{props.currentGame.name}</h2>
+            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+              {!gameMoreInfoOpen ? "expand_content" : "collapse_content"}
+            </span>
+          </div>
+        </Button>
         <div className={styles["running-game--game-info-container"]}>
           {gameMoreInfoOpen &&
             <>
@@ -703,6 +708,7 @@ const RunningGame = (props: RunningGameProps) => {
               <div className={styles["running-game--game-info-settings"]}>
                 <Button
                   variant="primary"
+                  aria-haspopup="dialog"
                   onClick={() => setConfirmDialog(true)}
                 >
                   <span>Lopeta peli</span>
@@ -712,9 +718,14 @@ const RunningGame = (props: RunningGameProps) => {
         </div>
 
       </div>
-      <div>
-        <div>
-          <button onClick={handleScrollPreviousHole}>previous</button>
+      <div className={styles["running-game--hole-list--container"]}>
+        <div className={styles["running-game--hole-list--nav-buttons"]}>
+          <Button
+            variant="secondary"
+            onClick={handleScrollPreviousHole}
+          >
+            <span>Edellinen</span>
+          </Button>
           <select
             onChange={handleHoleOptionSelect}
             value={currentHoleIndex + 1}
@@ -723,7 +734,12 @@ const RunningGame = (props: RunningGameProps) => {
               <option key={h.id}>{h.hole}</option>
             ))}
           </select>
-          <button onClick={handleScrollNextHole}>next</button>
+          <Button
+            variant="secondary"
+            onClick={handleScrollNextHole}
+          >
+            <span>Seuraava</span>
+          </Button>
         </div>
         <ul
           className={styles["running-game--hole-list"]}
