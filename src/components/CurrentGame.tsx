@@ -5,7 +5,7 @@ import styles from "./CurrentGame.module.css"
 import Dialog from "./Dialog";
 import { Button, Switch } from "./Buttons";
 import { ProgressActivity } from "./Loading";
-import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
+import { Game, GameState, useGameState, Hole, Player } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
 import PlayerScoreGrid from "./PlayerScoreGrid";
 import HoleNavigation from "./HoleNavigation";
@@ -311,7 +311,6 @@ interface GameHoleProps extends Hole {
 }
 
 const GameHole = memo(function GameHole(props: GameHoleProps) {
-  console.log(props);
   return (
     <li className={`${styles["running-game--hole-info"]} ${!props.isActive ? styles["disabled"] : ""}`.trim()} id={"hole-" + props.id}>
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
@@ -365,6 +364,76 @@ const GameInfo = memo(function GameInfo(props: GameInfoProps) {
   );
 });
 
+interface RunningGameInfoProps {
+  gameName: string;
+  players: Player[];
+  handleFinishGame: () => void;
+}
+
+export const RunningGameInfo = (props: RunningGameInfoProps) => {
+  const [gameMoreInfoOpen, setGameMoreInfoOpen] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState(false);
+  const { gameName, players, handleFinishGame } = props;
+
+  return (
+    <>
+      <div
+        className={styles["running-game--game-info"]}
+        style={{ gap: gameMoreInfoOpen ? "0.25rem" : "unset" }}
+      >
+        <Button
+          variant="wrapper"
+          onClick={() => setGameMoreInfoOpen((prevValue) => !prevValue)}
+          className={styles["running-game--game-name-container-wrapper"]}
+        >
+          <div
+            className={styles["running-game--game-name-container"]}
+          >
+            <h2>{gameName}</h2>
+            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+              {!gameMoreInfoOpen ? "expand_content" : "collapse_content"}
+            </span>
+          </div>
+        </Button>
+        <div className={styles["running-game--game-info-container"]}>
+          {gameMoreInfoOpen &&
+            <>
+              <GameInfo currentGamePlayers={players} />
+              <div className={styles["running-game--game-info-settings"]}>
+                <Button
+                  variant="primary"
+                  aria-haspopup="dialog"
+                  onClick={() => setConfirmDialog(true)}
+                >
+                  <span>Lopeta peli</span>
+                </Button>
+              </div>
+            </>}
+        </div>
+      </div>
+      <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
+        <div className={styles["running-game--game-info-settings--dialog-content"]}>
+          <span>Lopeta peli?</span>
+          <div className={styles["running-game--game-info-settings--dialog-content--buttons"]}>
+            <Button
+              onClick={handleFinishGame}
+              variant="primary"
+            >
+              <span>Kyllä</span>
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setConfirmDialog(false)}
+            >
+              <span>Ei</span>
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+    </>
+  );
+};
+
 interface RunningGameProps {
   currentGame: Game;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>
@@ -372,8 +441,6 @@ interface RunningGameProps {
 
 const RunningGame = (props: RunningGameProps) => {
   const { currentGame, setGameState } = props;
-  const [confirmDialog, setConfirmDialog] = useState(false);
-  const [gameMoreInfoOpen, setGameMoreInfoOpen] = useState(false);
   const holeListRef = useRef<HTMLUListElement>(null);
   const holeListChildrenWidths = useRef<{ width: number, id: string }[]>(null);
   const [currentHoleIndex, setCurrentHoleIndex] = useState(() => {
@@ -661,41 +728,11 @@ const RunningGame = (props: RunningGameProps) => {
 
   return (
     <>
-      <div
-        className={styles["running-game--game-info"]}
-        style={{ gap: gameMoreInfoOpen ? "0.25rem" : "unset" }}
-      >
-        <Button
-          variant="wrapper"
-          onClick={() => setGameMoreInfoOpen((prevValue) => !prevValue)}
-          className={styles["running-game--game-name-container-wrapper"]}
-        >
-          <div
-            className={styles["running-game--game-name-container"]}
-          >
-            <h2>{props.currentGame.name}</h2>
-            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-              {!gameMoreInfoOpen ? "expand_content" : "collapse_content"}
-            </span>
-          </div>
-        </Button>
-        <div className={styles["running-game--game-info-container"]}>
-          {gameMoreInfoOpen &&
-            <>
-              <GameInfo currentGamePlayers={props.currentGame.players} />
-              <div className={styles["running-game--game-info-settings"]}>
-                <Button
-                  variant="primary"
-                  aria-haspopup="dialog"
-                  onClick={() => setConfirmDialog(true)}
-                >
-                  <span>Lopeta peli</span>
-                </Button>
-              </div>
-            </>}
-        </div>
-
-      </div>
+      <RunningGameInfo 
+        gameName={currentGame.name}
+        players={currentGame.players}
+        handleFinishGame={handleFinishGame}
+      />
       <div className={styles["running-game--hole-list--container"]}>
         <HoleNavigation
           scrollFromButton={scrollFromButton}
@@ -718,25 +755,6 @@ const RunningGame = (props: RunningGameProps) => {
           ))}
         </ul>
       </div>
-      <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
-        <div className={styles["running-game--game-info-settings--dialog-content"]}>
-          <span>Lopeta peli?</span>
-          <div className={styles["running-game--game-info-settings--dialog-content--buttons"]}>
-            <Button
-              onClick={handleFinishGame}
-              variant="primary"
-            >
-              <span>Kyllä</span>
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => setConfirmDialog(false)}
-            >
-              <span>Ei</span>
-            </Button>
-          </div>
-        </div>
-      </Dialog>
     </>
   );
 };
