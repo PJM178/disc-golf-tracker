@@ -8,6 +8,7 @@ import { ProgressActivity } from "./Loading";
 import { Game, GameState, useGameState, Hole } from "@/context/GameStateContext";
 import { generateRandomId } from "@/utils/utilities";
 import PlayerScoreGrid from "./PlayerScoreGrid";
+import HoleNavigation from "./HoleNavigation";
 
 type NewGameType = Omit<Game, "startTime" | "endTime" | "currentHole">;
 
@@ -527,29 +528,6 @@ const RunningGame = (props: RunningGameProps) => {
     });
   }, [setGameState]);
 
-  const handleScrollNextHole = () => {
-    if (currentHoleIndex + 1 < currentGame.holeList.length) {
-      scrollFromButton.current = true;
-
-      setCurrentHoleIndex(currentHoleIndex + 1);
-
-    }
-  };
-
-  const handleScrollPreviousHole = () => {
-    if (currentHoleIndex !== 0) {
-      scrollFromButton.current = true;
-
-      setCurrentHoleIndex(currentHoleIndex - 1);
-    }
-  };
-
-  const handleHoleOptionSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    scrollFromButton.current = true;
-
-    setCurrentHoleIndex(+e.target.value - 1);
-  };
-
   // Side effect of currentHoleIndex changes is defined here, scrollFromButton ref is used to prevent
   // onScrollEnd event from affecting this hook
   useEffect(() => {
@@ -719,28 +697,12 @@ const RunningGame = (props: RunningGameProps) => {
 
       </div>
       <div className={styles["running-game--hole-list--container"]}>
-        <div className={styles["running-game--hole-list--nav-buttons"]}>
-          <Button
-            variant="secondary"
-            onClick={handleScrollPreviousHole}
-          >
-            <span>Edellinen</span>
-          </Button>
-          <select
-            onChange={handleHoleOptionSelect}
-            value={currentHoleIndex + 1}
-          >
-            {currentGame.holeList.map((h) => (
-              <option key={h.id}>{h.hole}</option>
-            ))}
-          </select>
-          <Button
-            variant="secondary"
-            onClick={handleScrollNextHole}
-          >
-            <span>Seuraava</span>
-          </Button>
-        </div>
+        <HoleNavigation
+          scrollFromButton={scrollFromButton}
+          currentHoleIndex={currentHoleIndex}
+          setCurrentHoleIndex={setCurrentHoleIndex}
+          currentGameHoleList={currentGame.holeList}
+        />
         <ul
           className={styles["running-game--hole-list"]}
           ref={holeListRef}
