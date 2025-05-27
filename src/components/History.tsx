@@ -1,4 +1,5 @@
 "use client"
+import { RunningGameInfo } from "./CurrentGame";
 import styles from "./History.module.css";
 import { Game, useGameState } from "@/context/GameStateContext";
 
@@ -7,6 +8,22 @@ const NoHistory = () => {
     <div className={styles["history-list--no-games"]}>
       <i>Ei pelejä</i>
     </div>
+  );
+};
+
+interface HistoricalGameProps {
+  game: Game;
+}
+
+const HistoricalGame = (props: HistoricalGameProps) => {
+  const { game } = props;
+
+  return (
+    <RunningGameInfo
+      gameName={game.name}
+      players={game.players}
+      historical={true}
+    />
   );
 };
 
@@ -31,6 +48,9 @@ const HistoryList = (props: HistoryListProps) => {
           <div>
             {handleDateDisplay(game.startTime)}
           </div>
+          <HistoricalGame 
+            game={game}
+          />
         </li>
       ))}
     </ul>
