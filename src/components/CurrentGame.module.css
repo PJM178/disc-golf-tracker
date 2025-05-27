@@ -181,7 +181,7 @@
 }
 
 .running-game--hole-info.disabled > :not(.running-game--hole-info--finish-game--container) {
-  filter: brightness(0.5);
+  opacity: 0.5;
 }
 
 .running-game--hole-players--container {
