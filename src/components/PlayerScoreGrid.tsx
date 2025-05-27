@@ -3,6 +3,7 @@ import styles from "./PlayerScoreGrid.module.css"
 
 interface BasePlayerScoreGridProps {
   scores: Game["players"];
+  historical?: boolean;
 }
 
 interface PlayerScoreGridWithButtons extends BasePlayerScoreGridProps, Hole {
@@ -58,7 +59,7 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
                 <span
                   className={styles["running-game--hole-players--leading-player"]}
                 >
-                  Johtaa
+                  {props.historical ? "Voitti" : "Johtaa"}
                 </span>
               </div>}
           </div>

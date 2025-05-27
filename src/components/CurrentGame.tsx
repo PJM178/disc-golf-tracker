@@ -348,6 +348,7 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
 
 interface GameInfoProps {
   currentGamePlayers: Game["players"];
+  historical?: boolean;
 };
 
 const GameInfo = memo(function GameInfo(props: GameInfoProps) {
@@ -360,6 +361,7 @@ const GameInfo = memo(function GameInfo(props: GameInfoProps) {
       hasButtons={false}
       scores={props.currentGamePlayers}
       leadingPlayer={playerWithLowestScore}
+      historical={props.historical}
     />
   );
 });
@@ -367,13 +369,14 @@ const GameInfo = memo(function GameInfo(props: GameInfoProps) {
 interface RunningGameInfoProps {
   gameName: string;
   players: Player[];
-  handleFinishGame: () => void;
+  handleFinishGame?: () => void;
+  historical?: boolean;
 }
 
 export const RunningGameInfo = (props: RunningGameInfoProps) => {
+  const { gameName, players, handleFinishGame, historical } = props;
   const [gameMoreInfoOpen, setGameMoreInfoOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState(false);
-  const { gameName, players, handleFinishGame } = props;
 
   return (
     <>
@@ -398,8 +401,8 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
         <div className={styles["running-game--game-info-container"]}>
           {gameMoreInfoOpen &&
             <>
-              <GameInfo currentGamePlayers={players} />
-              <div className={styles["running-game--game-info-settings"]}>
+              <GameInfo currentGamePlayers={players} historical={historical} />
+              {handleFinishGame && <div className={styles["running-game--game-info-settings"]}>
                 <Button
                   variant="primary"
                   aria-haspopup="dialog"
@@ -407,7 +410,7 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
                 >
                   <span>Lopeta peli</span>
                 </Button>
-              </div>
+              </div>}
             </>}
         </div>
       </div>
@@ -728,7 +731,7 @@ const RunningGame = (props: RunningGameProps) => {
 
   return (
     <>
-      <RunningGameInfo 
+      <RunningGameInfo
         gameName={currentGame.name}
         players={currentGame.players}
         handleFinishGame={handleFinishGame}
