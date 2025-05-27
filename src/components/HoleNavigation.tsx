@@ -1,6 +1,7 @@
 import { Hole } from "@/context/GameStateContext";
 import { Button } from "./Buttons";
 import styles from "./HoleNavigation.module.css";
+import { memo } from "react";
 
 interface HoleNavigationProps {
   scrollFromButton: React.RefObject<boolean>;
@@ -35,11 +36,28 @@ const HoleNavigation = (props: HoleNavigationProps) => {
     setCurrentHoleIndex(+e.target.value - 1);
   };
 
+  const handleButtonsDisabled = (button: "next" | "previous") => {
+    if (currentGameHoleList.length === 1) {
+      return true;
+    }
+
+    if (button === "next" && currentHoleIndex === currentGameHoleList.length - 1) {
+      return true;
+    }
+
+    if (button === "previous" && !currentHoleIndex) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <div className={styles["running-game--hole-list--nav-buttons"]}>
       <Button
         variant="secondary"
         onClick={handleScrollPreviousHole}
+        disabled={handleButtonsDisabled("previous")}
       >
         <span>Edellinen</span>
       </Button>
@@ -54,6 +72,7 @@ const HoleNavigation = (props: HoleNavigationProps) => {
       <Button
         variant="secondary"
         onClick={handleScrollNextHole}
+        disabled={handleButtonsDisabled("next")}
       >
         <span>Seuraava</span>
       </Button>
@@ -61,4 +80,4 @@ const HoleNavigation = (props: HoleNavigationProps) => {
   );
 };
 
-export default HoleNavigation;
+export default memo(HoleNavigation);
