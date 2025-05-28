@@ -313,7 +313,7 @@ interface GameHoleProps extends Hole {
 
 export const GameHole = memo(function GameHole(props: GameHoleProps) {
   return (
-    <li className={`${styles["running-game--hole-info"]} ${!props.isActive ? styles["disabled"] : ""}`.trim()} id={"hole-" + props.id}>
+    <li className={`${styles["running-game--hole-info"]} ${!props.isActive && !props.historical ? styles["disabled"] : ""}`.trim()} id={"hole-" + props.id}>
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
       {/* {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>} */}
       <PlayerScoreGrid
