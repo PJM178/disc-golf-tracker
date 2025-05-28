@@ -18,11 +18,22 @@ interface HistoricalGameProps {
 const HistoricalGame = (props: HistoricalGameProps) => {
   const { game } = props;
 
+  const handleDateDisplay = (time: number | null) => {
+    if (!time) return "";
+
+    const date = new Date(time);
+    const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "numeric", day: 'numeric' };
+    const formattedDate = date.toLocaleDateString(undefined, options);
+
+    return formattedDate;
+  };
+
   return (
     <RunningGameInfo
       gameName={game.name}
       players={game.players}
       historical={true}
+      date={handleDateDisplay(game.endTime)}
     />
   );
 };
@@ -32,23 +43,11 @@ interface HistoryListProps {
 }
 
 const HistoryList = (props: HistoryListProps) => {
-  const handleDateDisplay = (time: number) => {
-    const date = new Date(time);
-
-    return date.toString();
-  };
-
   return (
     <ul className={styles["history-list--game-list"]}>
       {props.gameHistory.map((game) => (
         <li key={game.id} className={styles["history-list--game-container"]}>
-          <div>
-            {game.name}
-          </div>
-          <div>
-            {handleDateDisplay(game.startTime)}
-          </div>
-          <HistoricalGame 
+          <HistoricalGame
             game={game}
           />
         </li>

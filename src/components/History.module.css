@@ -20,8 +20,11 @@
   transform: rotate(180deg);
 }
 
-.history-list--container {
-
+.history-list--game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
 }
 
 .history-list--no-games {

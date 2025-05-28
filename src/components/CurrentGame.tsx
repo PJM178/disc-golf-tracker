@@ -371,10 +371,11 @@ interface RunningGameInfoProps {
   players: Player[];
   handleFinishGame?: () => void;
   historical?: boolean;
+  date?: string;
 }
 
 export const RunningGameInfo = (props: RunningGameInfoProps) => {
-  const { gameName, players, handleFinishGame, historical } = props;
+  const { gameName, players, handleFinishGame, historical, date } = props;
   const [gameMoreInfoOpen, setGameMoreInfoOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState(false);
 
@@ -392,9 +393,22 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
           <div
             className={styles["running-game--game-name-container"]}
           >
-            <h2>{gameName}</h2>
-            <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-              {!gameMoreInfoOpen ? "expand_content" : "collapse_content"}
+            <div className={styles["running-game--game-name-name"]}>
+              <h2>{gameName}</h2>
+              {date &&
+                <span
+                  className={styles["running-game--game-name-date"]}
+                >
+                  {date}
+                </span>}
+            </div>
+
+            <span
+              className={styles["running-game--game-name-symbol"]}
+            >
+              <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+                {!gameMoreInfoOpen ? "expand_content" : "collapse_content"}
+              </span>
             </span>
           </div>
         </Button>
@@ -459,6 +473,7 @@ const RunningGame = (props: RunningGameProps) => {
       const clonedValue = { ...prevValue };
 
       if (clonedValue.currentGame) {
+        clonedValue.currentGame.endTime = new Date().getTime();
         clonedValue.history = [clonedValue?.currentGame, ...clonedValue.history];
       }
 

@@ -126,9 +126,24 @@
 
 .running-game--game-name-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   width: 100%;
+  gap: 0.5rem;
+}
+
+.running-game--game-name-name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.running-game--game-name-symbol {
+  display: flex;
+  margin-left: auto;
+}
+
+.running-game--game-name-date {
+  font-style: italic;
 }
 
 .running-game--game-name-container-wrapper:hover {
