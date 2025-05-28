@@ -308,9 +308,10 @@ const NewGame = () => {
 interface GameHoleProps extends Hole {
   handleHolePlayerScore: (dir: "inc" | "dec", holeId: string, playerId: string) => void;
   handleFinishHole: (holeId: string) => void;
+  historical: boolean;
 }
 
-const GameHole = memo(function GameHole(props: GameHoleProps) {
+export const GameHole = memo(function GameHole(props: GameHoleProps) {
   return (
     <li className={`${styles["running-game--hole-info"]} ${!props.isActive ? styles["disabled"] : ""}`.trim()} id={"hole-" + props.id}>
       <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
@@ -322,11 +323,12 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
         id={props.id}
         isActive={props.isActive}
         hole={props.hole}
+        historical={props.historical}
       />
       <div
         className={styles["running-game--hole-info--finish-game--container"]}
       >
-        <Button
+        {!props.historical && <Button
           onClick={() => props.handleFinishHole(props.id)}
           variant="tertiary"
           endIcon={
@@ -340,7 +342,7 @@ const GameHole = memo(function GameHole(props: GameHoleProps) {
           >
             <span>Reikä valmis</span>
           </div>
-        </Button>
+        </Button>}
       </div>
     </li>
   );
@@ -372,6 +374,7 @@ interface RunningGameInfoProps {
   handleFinishGame?: () => void;
   historical?: boolean;
   date?: string;
+  children: React.ReactNode;
 }
 
 export const RunningGameInfo = (props: RunningGameInfoProps) => {
@@ -447,6 +450,10 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
           </div>
         </div>
       </Dialog>
+      {props.historical ? gameMoreInfoOpen ?
+        props.children :
+        null :
+        props.children}
     </>
   );
 };
@@ -750,29 +757,31 @@ const RunningGame = (props: RunningGameProps) => {
         gameName={currentGame.name}
         players={currentGame.players}
         handleFinishGame={handleFinishGame}
-      />
-      <div className={styles["running-game--hole-list--container"]}>
-        <HoleNavigation
-          scrollFromButton={scrollFromButton}
-          currentHoleIndex={currentHoleIndex}
-          setCurrentHoleIndex={setCurrentHoleIndex}
-          currentGameHoleList={currentGame.holeList}
-        />
-        <ul
-          className={styles["running-game--hole-list"]}
-          ref={holeListRef}
-          onScrollEnd={handleULOnScrollEnd}
-        >
-          {props.currentGame.holeList.map((hole) => (
-            <GameHole
-              key={hole.id}
-              {...hole}
-              handleHolePlayerScore={handleHolePlayerScore}
-              handleFinishHole={handleFinishHole}
-            />
-          ))}
-        </ul>
-      </div>
+      >
+        <div className={styles["running-game--hole-list--container"]}>
+          <HoleNavigation
+            scrollFromButton={scrollFromButton}
+            currentHoleIndex={currentHoleIndex}
+            setCurrentHoleIndex={setCurrentHoleIndex}
+            currentGameHoleList={currentGame.holeList}
+          />
+          <ul
+            className={styles["running-game--hole-list"]}
+            ref={holeListRef}
+            onScrollEnd={handleULOnScrollEnd}
+          >
+            {props.currentGame.holeList.map((hole) => (
+              <GameHole
+                key={hole.id}
+                {...hole}
+                handleHolePlayerScore={handleHolePlayerScore}
+                handleFinishHole={handleFinishHole}
+                historical={false}
+              />
+            ))}
+          </ul>
+        </div>
+      </RunningGameInfo>
     </>
   );
 };

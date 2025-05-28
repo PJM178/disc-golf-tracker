@@ -36,8 +36,8 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
             {props.hasButtons ?
               <>
                 <div
-                  className={styles["running-game--hole-players--buttons--button"]}
-                  onClick={!props.isActive ? undefined : () => props.handleHolePlayerScore("inc", props.id, p.id)}
+                  className={`${styles["running-game--hole-players--buttons--button"]} ${props.historical ? styles["disabled"] : ""}`.trim()}
+                  onClick={!props.historical ? !props.isActive ? undefined : () => props.handleHolePlayerScore("inc", props.id, p.id) : undefined}
                 >
 
                   <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
@@ -45,8 +45,8 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
                   </span>
                 </div>
                 <div
-                  className={`${styles["running-game--hole-players--buttons--button"]} ${p.totalScore === 0 ? styles["disabled"] : ""}`.trim()}
-                  onClick={!props.isActive ? undefined : p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id)}
+                  className={`${styles["running-game--hole-players--buttons--button"]} ${p.totalScore === 0 || props.historical ? styles["disabled"] : ""}`.trim()}
+                  onClick={!props.historical ? !props.isActive ? undefined : p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id) : undefined}
                 >
                   <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
                     arrow_circle_down
