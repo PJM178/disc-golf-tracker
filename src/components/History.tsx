@@ -149,6 +149,7 @@ const HistoricalGame = (props: HistoricalGameProps) => {
                 handleHolePlayerScore={() => null}
                 handleFinishHole={() => null}
                 historical={true}
+                holeListLength={game.holeList.length}
               />
             ))}
           </ul>
