@@ -379,7 +379,7 @@ interface RunningGameInfoProps {
 
 export const RunningGameInfo = (props: RunningGameInfoProps) => {
   const { gameName, players, handleFinishGame, historical, date } = props;
-  const [gameMoreInfoOpen, setGameMoreInfoOpen] = useState(false);
+  const [gameMoreInfoOpen, setGameMoreInfoOpen] = useState(!historical);
   const [confirmDialog, setConfirmDialog] = useState(false);
 
   return (
