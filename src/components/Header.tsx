@@ -6,9 +6,6 @@ const Header = () => {
       <div>
         Frisbeegolf-päiväkirja
       </div>
-      <div className={`material-symbol--container material-symbols-outlined ${styles["symbol"]}`.trim()}>
-        menu
-      </div>
     </header>
   );
 };
