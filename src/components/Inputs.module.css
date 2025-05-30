@@ -1,5 +1,28 @@
 /* Textfield - BEGIN */
 
+.textfield--outlined {
+  padding: 0.5rem;
+  border: 2px solid hsla(var(--brand-parameters), 0.5);
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.textfield--outlined {
+  padding: 0.5rem;
+  border: 2px solid hsla(var(--brand-parameters), 0.5);
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.textfield--outlined:hover {
+  border: 2px solid hsla(var(--brand-parameters), 0.7);
+}
+
+.textfield--outlined:focus {
+  outline: none;
+  border: 2px solid hsla(var(--brand-parameters), 1);
+}
+
 .textfield--container {
   --textfield-padding-top: 16px;
   --textfield-padding-left: 14px;

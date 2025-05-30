@@ -2,6 +2,7 @@
   /* These are from the book as is */
   /* Contrast to fill at least 4.5:1 */
   --brand: hsl(230, 64.8%, 57.4%);
+  --brand-parameters: 230, 64.8%, 57.4%;
   /* Contrast to fill at least 4.5:1 */
   --text-strong: hsl(230, 39.9%, 17.2%);
   /* Contrast to fill at least 4.5:1 */
@@ -32,6 +33,7 @@
   /* These are from the book as is */
   /* Contrast to fill at least 4.5:1 */
   --brand: hsl(230, 64.8%, 57.4%);
+  --brand-parameters: 230, 64.8%, 57.4%;
   /* Contrast to fill at least 4.5:1 */
   --text-strong: hsl(230, 39.9%, 17.2%);
   /* Contrast to fill at least 4.5:1 */
@@ -61,7 +63,8 @@
 
 :root[data-theme="dark"] {
   /* Contrast to fill at least 4.5:1 */
-  --brand: hsl(230, 94%, 79%);
+  --brand: hsl(230, 95.2%, 79.2%);
+  --brand-parameters: 230, 95.2%, 79.2%;
   /* Contrast to fill at least 4.5:1 */
   --text-strong: hsl(230, 0%, 100%);
   /* Contrast to fill at least 4.5:1 */
@@ -93,6 +96,7 @@
   :root {
     /* Contrast to fill at least 4.5:1 */
     --brand: hsl(230, 95.2%, 79.2%);
+    --brand-parameters: 230, 95.2%, 79.2%;
     /* Contrast to fill at least 4.5:1 */
     --text-strong: hsl(230, 0%, 100%);
     /* Contrast to fill at least 4.5:1 */

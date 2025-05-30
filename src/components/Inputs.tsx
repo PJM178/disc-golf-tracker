@@ -1,34 +1,21 @@
-import { useState } from "react";
 import styles from "./Inputs.module.css";
 
-interface TextFieldProps {
-  label: string;
+interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  variant: "outlined";
 }
 
 const TextField = (props: TextFieldProps) => {
-  const [value, setValue] = useState("");
+  const { variant, className, ...rest } = props;
 
-  const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
+  const textFieldStyles = {
+    outlined: styles["textfield--outlined"],
+  }
 
   return (
-    <div
-      className={styles["textfield--container"]}
-    >
-      <label
-        className={styles["textfield--label"]}
-      >
-        {props.label}
-      </label>
-      <div>
-        <input
-          className={styles["textfield--input"]}
-          value={value}
-          onChange={handleChangeValue}
-        />
-      </div>
-    </div>
+    <input
+      {...rest}
+      className={`${className} ${textFieldStyles[variant]}`.trim()}
+    />
   );
 };
 

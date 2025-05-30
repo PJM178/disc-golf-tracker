@@ -9,6 +9,7 @@ import { Game, GameState, useGameState, Hole, Player } from "@/context/GameState
 import { generateRandomId } from "@/utils/utilities";
 import PlayerScoreGrid from "./PlayerScoreGrid";
 import HoleNavigation from "./HoleNavigation";
+import TextField from "./Inputs";
 
 type NewGameType = Omit<Game, "startTime" | "endTime" | "currentHole">;
 
@@ -40,7 +41,8 @@ const AddPlayerInput = memo(function AddPlayerInput(props: AddPlayerInputProps) 
 
   return (
     <div className={styles["new-game-form--form--players-input"]}>
-      <input
+      <TextField
+        variant="outlined"
         onChange={handleInputChangeEvent}
         value={props.playerName}
         id={props.playerId}
@@ -244,7 +246,8 @@ const NewGameForm = (props: NewGameFormProps) => {
       >
         <div className={styles["new-game-form--form--input-field"]}>
           <label htmlFor="new-game-name">Nimi</label>
-          <input
+          <TextField
+            variant="outlined"
             name="new-game-name"
             id="new-game-name"
             onChange={handleGameName}
@@ -253,7 +256,8 @@ const NewGameForm = (props: NewGameFormProps) => {
         </div>
         <div className={styles["new-game-form--form--input-field"]}>
           <label htmlFor="new-game-holes">Reiät</label>
-          <input
+          <TextField
+            variant="outlined"
             name="new-game-holes"
             id="new-game-holes"
             onChange={handleGameHoles}
