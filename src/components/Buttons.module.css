@@ -197,6 +197,7 @@
   padding: 12px;
   box-sizing: border-box;
   align-items: center;
+  position: relative;
 }
 
 .switch--container.disabled {

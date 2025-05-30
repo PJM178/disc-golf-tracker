@@ -25,4 +25,6 @@
   opacity: 1;
   transition: opacity 50ms linear;
   background-color: var(--background);
+  max-height: 80%;
+  overflow: auto;
 }
