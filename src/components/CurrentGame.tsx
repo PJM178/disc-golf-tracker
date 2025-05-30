@@ -45,14 +45,31 @@ const AddPlayerInput = memo(function AddPlayerInput(props: AddPlayerInputProps) 
         value={props.playerName}
         id={props.playerId}
       />
-      <div
-        className={styles["new-game-form--form--players-remove-icon"]}
-        onClick={props.index === 0 ? undefined : handleRemovePlayer}
-      >
-        <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-          {props.index === 0 ? undefined : "person_remove"}
-        </span>
-      </div>
+      {props.index !== 0 ?
+        <Button
+          onClick={handleRemovePlayer}
+          variant="wrapper"
+          type="button"
+        >
+          <div
+            className={styles["new-game-form--form--players-remove-icon"]}
+          >
+            <span
+              className={`material-symbol--container material-symbols-outlined`.trim()}
+              aria-hidden={true}
+            >
+              person_remove
+            </span>
+          </div>
+        </Button> :
+        <div
+          className={styles["new-game-form--form--players-remove-icon"]}
+        >
+          <span
+            className={`material-symbol--container material-symbols-outlined`.trim()}
+            aria-hidden={true}
+          />
+        </div>}
     </div>
   );
 });
@@ -254,14 +271,23 @@ const NewGameForm = (props: NewGameFormProps) => {
               />
             ))}
           </div>
-          <div onClick={handleAddPlayer} className={styles["new-game-form--form--add-players"]}>
-            <span>Lisää pelaaja</span>
-            <div className={styles["new-game-form--form--players-remove-icon"]}>
-              <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-                person_add
-              </span>
+          <Button
+            variant="wrapper"
+            onClick={handleAddPlayer}
+            type="button"
+          >
+            <div className={styles["new-game-form--form--add-players"]}>
+              <span>Lisää pelaaja</span>
+              <div className={styles["new-game-form--form--players-remove-icon"]}>
+                <span
+                  className={`material-symbol--container material-symbols-outlined`.trim()}
+                  aria-hidden={true}
+                >
+                  person_add
+                </span>
+              </div>
             </div>
-          </div>
+          </Button>
         </div>
         <div className={styles["new-game-form--form--input-field-row"]}>
           <label>Tallenna sijainti</label>
