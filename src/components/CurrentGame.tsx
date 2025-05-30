@@ -286,15 +286,20 @@ const NewGame = () => {
 
   return (
     <div className={styles["current-game--no-game"]}>
-      <div
+      <Button
+        variant="wrapper"
         onClick={() => setIsNewGameDialogOpen(true)}
-        className={styles["current-game--new-game"]}
       >
-        <b>Uusi peli&nbsp;</b>
-        <span className={`material-symbol--container material-symbols-outlined`.trim()}>
-          add
-        </span>
-      </div>
+        <div
+          className={styles["current-game--new-game"]}
+        >
+          <b>Uusi peli&nbsp;</b>
+          <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+            add
+          </span>
+        </div>
+      </Button>
+
       <Dialog
         isOpen={isNewGameDialogOpen}
         closeModal={() => setIsNewGameDialogOpen(false)}
