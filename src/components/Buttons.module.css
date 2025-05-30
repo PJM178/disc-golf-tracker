@@ -223,7 +223,7 @@
   border-radius: 7px;
   width: 100%;
   height: 100%;
-  background-color: var(--stroke-weak-variant);
+  background-color: var(--stroke-weak);
 }
 
 .switch--background.active {

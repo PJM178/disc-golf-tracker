@@ -289,12 +289,16 @@ const NewGame = () => {
       <Button
         variant="wrapper"
         onClick={() => setIsNewGameDialogOpen(true)}
+        aria-haspopup="dialog"
       >
         <div
           className={styles["current-game--new-game"]}
         >
           <b>Uusi peli&nbsp;</b>
-          <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+          <span
+            className={`material-symbol--container material-symbols-outlined`.trim()}
+            aria-hidden={true}
+          >
             add
           </span>
         </div>
