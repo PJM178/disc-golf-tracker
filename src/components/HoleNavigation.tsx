@@ -64,6 +64,7 @@ const HoleNavigation = (props: HoleNavigationProps) => {
       <select
         onChange={handleHoleOptionSelect}
         value={currentHoleIndex + 1}
+        aria-label="Valitse reikä"
       >
         {currentGameHoleList.map((h) => (
           <option key={h.id}>{h.hole}</option>

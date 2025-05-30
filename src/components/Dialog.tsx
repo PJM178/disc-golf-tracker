@@ -57,6 +57,11 @@ const Dialog = (props: DialogProps) => {
 
     document.addEventListener("keydown", handleKeyDown);
 
+    // Capture the focus on open for assistive technologies
+    if (dialogContainerRef.current) {
+      dialogContainerRef.current.focus();
+    }
+
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, closeModal]);
 
@@ -73,6 +78,7 @@ const Dialog = (props: DialogProps) => {
         <div
           ref={dialogContainerRef}
           className={`${styles["dialog-content--container"]} ${containerClassname ?? ""}`.trim()}
+          tabIndex={0}
         >
           <div className={styles["dialog-content--content"]}>
             {children}

@@ -395,6 +395,7 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
           variant="wrapper"
           onClick={() => setGameMoreInfoOpen((prevValue) => !prevValue)}
           className={styles["running-game--game-name-container-wrapper"]}
+          aria-expanded={gameMoreInfoOpen}
         >
           <div
             className={styles["running-game--game-name-container"]}
@@ -420,7 +421,7 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
         </Button>
         <div className={styles["running-game--game-info-container"]}>
           {gameMoreInfoOpen &&
-            <>
+            <div id="game-info">
               <GameInfo currentGamePlayers={players} historical={historical} />
               {handleFinishGame && <div className={styles["running-game--game-info-settings"]}>
                 <Button
@@ -431,7 +432,7 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
                   <span>Lopeta peli</span>
                 </Button>
               </div>}
-            </>}
+            </div>}
         </div>
       </div>
       <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>

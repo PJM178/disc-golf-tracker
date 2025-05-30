@@ -18,7 +18,10 @@ const PaneSelector = (props: PaneSelectorProps) => {
         <div
           className={`${styles["pane-selector--symbol-container"]} ${props.currentPane === "home" ? "selected" : ""}`.trim()}
         >
-          <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+          <span
+            className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}
+            aria-hidden={true}
+          >
             home
           </span>
           <span>
@@ -34,7 +37,10 @@ const PaneSelector = (props: PaneSelectorProps) => {
         <div
           className={`${styles["pane-selector--symbol-container"]} ${props.currentPane === "history" ? "selected" : ""}`.trim()}
         >
-          <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+          <span
+            className={`material-symbol--container material-symbols-outlined`.trim()}
+            aria-hidden={true}
+          >
             history
           </span>
           <span>

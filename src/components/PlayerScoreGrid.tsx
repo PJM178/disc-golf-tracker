@@ -41,12 +41,16 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
                   variant="wrapper"
                   disabled={props.historical ? true : (props.isActive ? false : true)}
                   style={{ borderRadius: "50%" }}
+                  aria-label={`Lisää pelaajan ${p.name} pisteitä`}
                 >
                   <div
                     className={`${styles["running-game--hole-players--buttons--button"]} ${props.historical ? styles["disabled"] : ""}`.trim()}
                   >
 
-                    <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+                    <span
+                      className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}
+                      aria-hidden={true}
+                    >
                       arrow_circle_up
                     </span>
                   </div>
@@ -56,11 +60,15 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
                   onClick={!props.historical ? !props.isActive ? undefined : p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id) : undefined}
                   disabled={props.historical ? true : (props.isActive ? false : true) || p.totalScore === 0}
                   style={{ borderRadius: "50%" }}
+                  aria-label={`Vähennä pelaajan ${p.name} pisteitä`}
                 >
                   <div
                     className={`${styles["running-game--hole-players--buttons--button"]} ${p.totalScore === 0 || props.historical ? styles["disabled"] : ""}`.trim()}
                   >
-                    <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+                    <span
+                      className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}
+                      aria-hidden={true}
+                    >
                       arrow_circle_down
                     </span>
                   </div>
