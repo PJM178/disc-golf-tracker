@@ -39,6 +39,22 @@
   cursor: pointer;
 }
 
+.button--wrapper:active {
+  opacity: 0.8;
+}
+
+.button--wrapper:focus-visible {
+  color: var(--brand);
+}
+
+.button--wrapper:hover:disabled {
+  cursor: not-allowed;
+}
+
+.button--wrapper:hover:not(:disabled)>* {
+  color: var(--brand);
+}
+
 .button--primary {
   background-color: var(--brand);
   border-radius: 5px;
