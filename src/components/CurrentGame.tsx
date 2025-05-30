@@ -219,14 +219,23 @@ const NewGameForm = (props: NewGameFormProps) => {
     <div className={styles["new-game-form--container"]}>
       <div className={styles["new-game-form--title"]}>
         <div>Uusi peli</div>
-        <div
-          className={styles["new-game-form--title-symbol--container"]}
+        <Button
           onClick={props.closeDialog}
+          variant="wrapper"
+          type="button"
+          style={{ marginLeft: "auto" }}
         >
-          <div className={`material-symbol--container material-symbols-outlined`.trim()}>
-            close
+          <div
+            className={styles["new-game-form--title-symbol--container"]}
+          >
+            <div
+              className={`material-symbol--container material-symbols-outlined`.trim()}
+              aria-hidden={true}
+            >
+              close
+            </div>
           </div>
-        </div>
+        </Button>
       </div>
       <form
         className={styles["new-game-form--form--container"]}
@@ -294,13 +303,19 @@ const NewGameForm = (props: NewGameFormProps) => {
           <Switch disabled={metaData && metaData.permissions.geolocation === "denied" ? true : false} isActive={newGameProps.location !== null ? true : false} onClick={handleLocation} />
         </div>
         <div className={styles["new-game-form--form--button-container"]}>
-          <button
-            id="close-modal"
-            type="button"
+          <Button
+            type="submit"
+            variant="primary"
           >
-            Sulje
-          </button>
-          <button>Lisää peli</button>
+            <span>Lisää peli</span>
+          </Button>
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={props.closeDialog}
+          >
+            <span>Sulje</span>
+          </Button>
         </div>
       </form>
     </div>
