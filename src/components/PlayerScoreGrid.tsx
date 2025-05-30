@@ -39,7 +39,7 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
                 <Button
                   onClick={!props.historical ? !props.isActive ? undefined : () => props.handleHolePlayerScore("inc", props.id, p.id) : undefined}
                   variant="wrapper"
-                  disabled={(props.isActive ? false : true)}
+                  disabled={props.historical ? true : (props.isActive ? false : true)}
                   style={{ borderRadius: "50%" }}
                 >
                   <div
@@ -54,7 +54,7 @@ const PlayerScoreGrid = (props: PlayerScoreGridProps) => {
                 <Button
                   variant="wrapper"
                   onClick={!props.historical ? !props.isActive ? undefined : p.totalScore === 0 ? undefined : () => props.handleHolePlayerScore("dec", props.id, p.id) : undefined}
-                  disabled={(props.isActive ? false : true) || p.totalScore === 0}
+                  disabled={props.historical ? true : (props.isActive ? false : true) || p.totalScore === 0}
                   style={{ borderRadius: "50%" }}
                 >
                   <div
