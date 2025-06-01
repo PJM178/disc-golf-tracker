@@ -39,7 +39,7 @@
   cursor: pointer;
 }
 
-.button--wrapper:active {
+.button--wrapper:active:not(:disabled) {
   opacity: 0.8;
 }
 
@@ -47,7 +47,7 @@
   color: var(--brand);
 }
 
-.button--wrapper:hover:disabled {
+.button--wrapper:disabled {
   cursor: not-allowed;
 }
 
