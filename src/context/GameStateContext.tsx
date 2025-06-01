@@ -59,7 +59,7 @@ export const GameStateProvider = ({ children }: { children: React.ReactNode }) =
   // Load the game state data from local storage on first load along with some "meta data"
   useEffect(() => {
     const savedState = localStorage.getItem("gameState");
-    console.log(savedState)
+
     if (savedState) {
       const parsedState = JSON.parse(savedState) as GameState;
 

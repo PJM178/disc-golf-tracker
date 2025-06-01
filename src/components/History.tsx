@@ -129,6 +129,7 @@ const HistoricalGame = (props: HistoricalGameProps) => {
         players={game.players}
         historical={true}
         date={handleDateDisplay(game.endTime)}
+        location={game.location}
       >
         <div className={runningGameStyles["running-game--hole-list--container"]}>
           <HoleNavigation

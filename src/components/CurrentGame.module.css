@@ -165,6 +165,10 @@
   display: flex;
 }
 
+.running-game--game-location {
+  margin-left: auto;
+}
+
 .running-game--game-info-settings--dialog-content {
   display: flex;
   flex-direction: column;

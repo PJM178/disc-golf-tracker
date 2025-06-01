@@ -10,6 +10,7 @@ import { generateRandomId } from "@/utils/utilities";
 import PlayerScoreGrid from "./PlayerScoreGrid";
 import HoleNavigation from "./HoleNavigation";
 import TextField from "./Inputs";
+import { AnchorWrapper } from "./Wrappers";
 
 type NewGameType = Omit<Game, "startTime" | "endTime" | "currentHole">;
 
@@ -91,7 +92,7 @@ const NewGameForm = (props: NewGameFormProps) => {
   });
 
   const { setGameState, metaData, setMetaData } = useGameState();
-  console.log(metaData);
+
   const handleGameName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewGameProps({ ...newGameProps, name: e.target.value });
   };
@@ -185,9 +186,6 @@ const NewGameForm = (props: NewGameFormProps) => {
 
     if (metaData.permissions.geolocation === "granted") {
       navigator.geolocation.getCurrentPosition((pos) => {
-        console.log("Latitude: ", pos.coords.latitude);
-        console.log("Longitude: ", pos.coords.longitude);
-
         setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
       });
     }
@@ -195,9 +193,6 @@ const NewGameForm = (props: NewGameFormProps) => {
     if (metaData.permissions.geolocation === "prompt") {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          console.log("Latitude: ", pos.coords.latitude);
-          console.log("Longitude: ", pos.coords.longitude);
-
           setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
         },
         (err) => {
@@ -425,17 +420,41 @@ const GameInfo = memo(function GameInfo(props: GameInfoProps) {
   );
 });
 
+interface LocationProps {
+  location: Game["location"];
+}
+
+const Location = (props: LocationProps) => {
+  const { location } = props;
+
+  if (!location) return null;
+
+  return (
+    <AnchorWrapper
+      href={`https://www.google.com/maps/place/${location.latitude},${location.longitude}`}
+      target="_blank"
+      className={styles["running-game--game-location"]}
+    >
+      <span>Sijainti</span>
+      <span className={`material-symbol--container material-symbols-outlined`.trim()}>
+        open_in_new
+      </span>
+    </AnchorWrapper>
+  );
+};
+
 interface RunningGameInfoProps {
   gameName: string;
   players: Player[];
   handleFinishGame?: () => void;
+  location: Game["location"];
   historical?: boolean;
   date?: string;
   children: React.ReactNode;
 }
 
 export const RunningGameInfo = (props: RunningGameInfoProps) => {
-  const { gameName, players, handleFinishGame, historical, date } = props;
+  const { gameName, players, handleFinishGame, historical, date, location } = props;
   const [gameMoreInfoOpen, setGameMoreInfoOpen] = useState(!historical);
   const [confirmDialog, setConfirmDialog] = useState(false);
 
@@ -477,15 +496,18 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
           {gameMoreInfoOpen &&
             <>
               <GameInfo currentGamePlayers={players} historical={historical} />
-              {handleFinishGame &&
+              {(handleFinishGame || location) &&
                 <div className={styles["running-game--game-info-settings"]}>
-                  <Button
-                    variant="primary"
-                    aria-haspopup="dialog"
-                    onClick={() => setConfirmDialog(true)}
-                  >
-                    <span>Lopeta peli</span>
-                  </Button>
+                  {handleFinishGame &&
+                    <Button
+                      variant="primary"
+                      aria-haspopup="dialog"
+                      onClick={() => setConfirmDialog(true)}
+                    >
+                      <span>Lopeta peli</span>
+                    </Button>}
+                  {location &&
+                    <Location location={location} />}
                 </div>}
             </>}
         </div>
@@ -816,6 +838,7 @@ const RunningGame = (props: RunningGameProps) => {
         gameName={currentGame.name}
         players={currentGame.players}
         handleFinishGame={handleFinishGame}
+        location={currentGame.location}
       >
         <div className={styles["running-game--hole-list--container"]}>
           <HoleNavigation
@@ -848,8 +871,6 @@ const RunningGame = (props: RunningGameProps) => {
 
 const CurrentGame = () => {
   const { gameState, isLoading, setGameState } = useGameState();
-
-  console.log(gameState);
 
   if (isLoading) {
     return (
