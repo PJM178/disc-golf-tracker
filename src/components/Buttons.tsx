@@ -1,4 +1,5 @@
 import styles from "./Buttons.module.css";
+import { ProgressActivity } from "./Loading";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -53,10 +54,11 @@ interface SwitchProps {
   ariaLabelledBy?: string;
   disabled?: boolean;
   title?: string;
+  isLoading?: boolean;
 }
 
 export const Switch = (props: SwitchProps) => {
-  const { isActive, onClick, ariaLabelledBy, disabled, title } = props;
+  const { isActive, onClick, ariaLabelledBy, disabled, title, isLoading } = props;
 
   function handleStyles(element: "background" | "tack" | "tack-container") {
     if (element === "background") {
@@ -95,8 +97,8 @@ export const Switch = (props: SwitchProps) => {
 
   return (
     <span
-      className={`${styles["switch--container"]}${disabled ? ` ${styles["disabled"]}` : ""}`}
-      onClick={!disabled ? onClick : undefined}
+      className={`${styles["switch--container"]} ${disabled ? ` ${styles["disabled"]}` : ""} ${isLoading ? ` ${styles["loading"]}` : ""}`.trim()}
+      onClick={(!disabled || !isLoading) ? onClick : undefined}
       onKeyDown={!disabled ? handleKeyDown : undefined}
       role="switch"
       aria-checked={isActive}
@@ -110,6 +112,10 @@ export const Switch = (props: SwitchProps) => {
         <span className={`${styles["switch--tack-border"]}${disabled ? ` ${styles["disabled"]}` : ""}`} />
       </span>
       <span className={handleStyles("background")} />
+      {isLoading &&
+        <span className={styles["loading-icon--container"]}>
+          <ProgressActivity className={styles["loading-icon"]} />
+        </span>}
     </span>
   );
 };

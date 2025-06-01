@@ -90,6 +90,7 @@ const NewGameForm = (props: NewGameFormProps) => {
     id: generateRandomId(),
     holeList: [],
   });
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
   const { setGameState, metaData, setMetaData } = useGameState();
 
@@ -173,6 +174,12 @@ const NewGameForm = (props: NewGameFormProps) => {
     }
   };
 
+  const getCurrentPositionAsync = (): Promise<GeolocationPosition> => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition((pos) => resolve(pos), (err) => reject(err));
+    });
+  };
+
   const handleLocation = async () => {
     if (!metaData || metaData.permissions.geolocation === "denied") {
       return;
@@ -185,30 +192,70 @@ const NewGameForm = (props: NewGameFormProps) => {
     }
 
     if (metaData.permissions.geolocation === "granted") {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
-      });
+      setIsLoadingLocation(true);
+
+      try {
+        const result = await getCurrentPositionAsync();
+
+        setNewGameProps({ ...newGameProps, location: { latitude: result.coords.latitude, longitude: result.coords.longitude } });
+      } catch (err) {
+        if (err instanceof GeolocationPositionError) {
+          console.error("Error prompting user: ", err.message);
+        }
+      } finally {
+        setIsLoadingLocation(false);
+
+        return;
+      }
+      // navigator.geolocation.getCurrentPosition((pos) => {
+      //   setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
+      // });
     }
 
     if (metaData.permissions.geolocation === "prompt") {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
-        },
-        (err) => {
-          setMetaData((prevValue) => {
-            if (prevValue) {
-              prevValue.permissions.geolocation = "denied";
+      setIsLoadingLocation(true);
 
-              return { ...prevValue };
-            }
+      try {
+        const result = await getCurrentPositionAsync();
 
-            return prevValue;
-          });
+        setNewGameProps({ ...newGameProps, location: { latitude: result.coords.latitude, longitude: result.coords.longitude } });
+      } catch (err) {
+        setMetaData((prevValue) => {
+          if (prevValue) {
+            prevValue.permissions.geolocation = "denied";
 
+            return { ...prevValue };
+          }
+
+          return prevValue;
+        });
+
+        if (err instanceof GeolocationPositionError) {
           console.error("Error prompting user: ", err.message);
         }
-      );
+      } finally {
+        setIsLoadingLocation(false);
+
+        return;
+      }
+      // navigator.geolocation.getCurrentPosition(
+      //   (pos) => {
+      //     setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
+      //   },
+      //   (err) => {
+      //     setMetaData((prevValue) => {
+      //       if (prevValue) {
+      //         prevValue.permissions.geolocation = "denied";
+
+      //         return { ...prevValue };
+      //       }
+
+      //       return prevValue;
+      //     });
+
+      //     console.error("Error prompting user: ", err.message);
+      //   }
+      // );
     }
   }
 
@@ -299,7 +346,12 @@ const NewGameForm = (props: NewGameFormProps) => {
         </div>
         <div className={styles["new-game-form--form--input-field-row"]}>
           <label>Tallenna sijainti</label>
-          <Switch disabled={metaData && metaData.permissions.geolocation === "denied" ? true : false} isActive={newGameProps.location !== null ? true : false} onClick={handleLocation} />
+          <Switch
+            disabled={metaData && metaData.permissions.geolocation === "denied" ? true : false}
+            isActive={newGameProps.location !== null ? true : false}
+            onClick={handleLocation}
+            isLoading={isLoadingLocation}
+          />
         </div>
         <div className={styles["new-game-form--form--button-container"]}>
           <Button

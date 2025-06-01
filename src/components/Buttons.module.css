@@ -208,7 +208,11 @@
   cursor: pointer;
 }
 
-.switch--tack::after {
+.switch--container.loading > *:not(.loading-icon--container) {
+  visibility: hidden;
+}
+
+.switch--tack:not(.switch--container.disabled)::after {
   content: '';
   display: block;
   width: 100%;
@@ -216,6 +220,10 @@
   background-color: var(--text-strong);
   border-radius: 50%;
   opacity: 0.3;
+}
+
+.switch--container.disabled .switch--tack::after {
+  all: unset;
 }
 
 .switch--container:hover .switch--tack::after {
@@ -281,4 +289,31 @@
   height: 100%;
   z-index: 0;
   display: none;
+}
+
+.loading-icon--container {
+  display: flex;
+  position: absolute;
+}
+
+.loading-icon {
+  --rotation-offset: 0deg;
+  /* fill: #9aa0a6; */
+  fill: var(--text-strong);
+  transform-origin: center;
+  animation: rotateIcon 650ms linear infinite;
+  height: 2rem;
+  filter: brightness(0.6);
+}
+
+@keyframes rotateIcon {
+  0% {
+    transform: rotate(var(--rotation-offset));
+    /* Start from the offset */
+  }
+
+  100% {
+    transform: rotate(calc(360deg + var(--rotation-offset)));
+    /* Complete the 360-degree rotation with the offset */
+  }
 }
