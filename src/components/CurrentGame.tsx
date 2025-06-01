@@ -475,18 +475,19 @@ export const RunningGameInfo = (props: RunningGameInfoProps) => {
         </Button>
         <div className={styles["running-game--game-info-container"]}>
           {gameMoreInfoOpen &&
-            <div id="game-info">
+            <>
               <GameInfo currentGamePlayers={players} historical={historical} />
-              {handleFinishGame && <div className={styles["running-game--game-info-settings"]}>
-                <Button
-                  variant="primary"
-                  aria-haspopup="dialog"
-                  onClick={() => setConfirmDialog(true)}
-                >
-                  <span>Lopeta peli</span>
-                </Button>
-              </div>}
-            </div>}
+              {handleFinishGame &&
+                <div className={styles["running-game--game-info-settings"]}>
+                  <Button
+                    variant="primary"
+                    aria-haspopup="dialog"
+                    onClick={() => setConfirmDialog(true)}
+                  >
+                    <span>Lopeta peli</span>
+                  </Button>
+                </div>}
+            </>}
         </div>
       </div>
       <Dialog isOpen={confirmDialog} closeModal={() => setConfirmDialog(false)}>
