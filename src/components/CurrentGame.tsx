@@ -207,9 +207,6 @@ const NewGameForm = (props: NewGameFormProps) => {
 
         return;
       }
-      // navigator.geolocation.getCurrentPosition((pos) => {
-      //   setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
-      // });
     }
 
     if (metaData.permissions.geolocation === "prompt") {
@@ -238,24 +235,6 @@ const NewGameForm = (props: NewGameFormProps) => {
 
         return;
       }
-      // navigator.geolocation.getCurrentPosition(
-      //   (pos) => {
-      //     setNewGameProps({ ...newGameProps, location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude } });
-      //   },
-      //   (err) => {
-      //     setMetaData((prevValue) => {
-      //       if (prevValue) {
-      //         prevValue.permissions.geolocation = "denied";
-
-      //         return { ...prevValue };
-      //       }
-
-      //       return prevValue;
-      //     });
-
-      //     console.error("Error prompting user: ", err.message);
-      //   }
-      // );
     }
   }
 
