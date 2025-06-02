@@ -187,7 +187,7 @@ const NewGameForm = (props: NewGameFormProps) => {
       return;
     }
 
-    if (newGameProps.location || location) {
+    if (location) {
       setLocation(null);
 
       return;
