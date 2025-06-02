@@ -90,6 +90,8 @@ const NewGameForm = (props: NewGameFormProps) => {
     id: generateRandomId(),
     holeList: [],
   });
+  // location as its own state as it being async operation, updating newGameProps can result in stale state
+  const [location, setLocation] = useState<Game["location"]>(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
   const { setGameState, metaData, setMetaData } = useGameState();
@@ -154,7 +156,7 @@ const NewGameForm = (props: NewGameFormProps) => {
         id: newGameProps.id,
         name: newGameProps.name,
         players: newGameProps.players,
-        location: newGameProps.location,
+        location: location,
         holes: newGameProps.holes || 1,
         holeList: populateHoles,
         currentHole: populateHoles[0].id,
@@ -185,8 +187,8 @@ const NewGameForm = (props: NewGameFormProps) => {
       return;
     }
 
-    if (newGameProps.location) {
-      setNewGameProps({ ...newGameProps, location: null });
+    if (newGameProps.location || location) {
+      setLocation(null);
 
       return;
     }
@@ -196,8 +198,7 @@ const NewGameForm = (props: NewGameFormProps) => {
 
       try {
         const result = await getCurrentPositionAsync();
-
-        setNewGameProps({ ...newGameProps, location: { latitude: result.coords.latitude, longitude: result.coords.longitude } });
+        setLocation({ latitude: result.coords.latitude, longitude: result.coords.longitude });
       } catch (err) {
         if (err instanceof GeolocationPositionError) {
           console.error("Error prompting user: ", err.message);
@@ -215,7 +216,7 @@ const NewGameForm = (props: NewGameFormProps) => {
       try {
         const result = await getCurrentPositionAsync();
 
-        setNewGameProps({ ...newGameProps, location: { latitude: result.coords.latitude, longitude: result.coords.longitude } });
+        setLocation({ latitude: result.coords.latitude, longitude: result.coords.longitude });
       } catch (err) {
         setMetaData((prevValue) => {
           if (prevValue) {
@@ -327,7 +328,7 @@ const NewGameForm = (props: NewGameFormProps) => {
           <label>Tallenna sijainti</label>
           <Switch
             disabled={metaData && metaData.permissions.geolocation === "denied" ? true : false}
-            isActive={newGameProps.location !== null ? true : false}
+            isActive={location !== null ? true : false}
             onClick={handleLocation}
             isLoading={isLoadingLocation}
           />
