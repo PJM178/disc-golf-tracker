@@ -33,7 +33,12 @@ const HoleNavigation = (props: HoleNavigationProps) => {
   const handleHoleOptionSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     scrollFromButton.current = true;
 
-    setCurrentHoleIndex(+e.target.value - 1);
+    const selectedOption = e.target.options[e.target.selectedIndex];
+    const index = selectedOption.dataset.index;
+
+    if (index) {
+      setCurrentHoleIndex(+index);
+    }
   };
 
   const handleButtonsDisabled = (button: "next" | "previous") => {
@@ -63,11 +68,17 @@ const HoleNavigation = (props: HoleNavigationProps) => {
       </Button>
       <select
         onChange={handleHoleOptionSelect}
-        value={currentHoleIndex + 1}
+        value={currentGameHoleList[currentHoleIndex].id}
         aria-label="Valitse reikä"
       >
-        {currentGameHoleList.map((h) => (
-          <option key={h.id}>{h.hole}</option>
+        {currentGameHoleList.map((h, i) => (
+          <option
+            key={h.id}
+            data-index={i}
+            value={h.id}
+          >
+            {h.hole}
+          </option>
         ))}
       </select>
       <Button

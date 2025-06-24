@@ -391,13 +391,79 @@ interface GameHoleProps extends Hole {
   handleFinishHole: (holeId: string) => void;
   historical: boolean;
   holeListLength: number;
+  handleRenameHole: (id: string, newName: number, hole: number) => void;
 }
 
 export const GameHole = memo(function GameHole(props: GameHoleProps) {
+  const [isRenameOpen, setIsRenameOpen] = useState(false);
+  const [holeValue, setHoleValue] = useState(props.hole);
+  const nameFieldRef = useRef<HTMLInputElement | null>(null);
+
+  const handleHoleName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHoleValue(+e.target.value);
+  };
+
+  const handleNameSubmit = () => {
+    props.handleRenameHole(props.id, holeValue, props.hole);
+    setIsRenameOpen(false);
+  };
+
+  const handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleNameSubmit();
+    }
+  };
+
+  const handleOpenNameEdit = () => {
+    setIsRenameOpen(true);
+  };
+
+  // Focus on the input field when it's opened
+  useEffect(() => {
+    if (nameFieldRef.current) {
+      nameFieldRef.current.focus();
+    }
+  }, [isRenameOpen]);
+
   return (
     <li className={`${styles["running-game--hole-info"]} ${!props.isActive && !props.historical ? styles["disabled"] : ""}`.trim()} id={"hole-" + props.id}>
-      <div><span>Reikä&nbsp;</span><span>{props.hole}</span></div>
-      {/* {props.currentHole === props.id && <>HERE BE CURRENT HOLE</>} */}
+      <div className={styles["running-game--hole-info--name"]}>
+        <span>Reikä&nbsp;</span>
+        <span>
+          {isRenameOpen ?
+            <span>
+              <TextField
+                ref={nameFieldRef}
+                className={styles["running-game--hole-info--name-input"]}
+                variant="outlined"
+                name="new-game-holes"
+                id="new-game-holes"
+                onChange={handleHoleName}
+                onKeyDown={handleNameKeyDown}
+                type="number"
+                min="0"
+                step="1"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                onBlur={handleNameSubmit}
+                value={holeValue}
+              />
+            </span> :
+            <span>{props.hole}</span>}
+        </span>
+        <span className={styles["running-game--hole-info--name-button--container"]}>
+          <Button
+            variant="wrapper"
+            onClick={!isRenameOpen ? handleOpenNameEdit : handleNameSubmit}
+          >
+            <span className={styles["running-game--hole-info--name-button"]}>
+              <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+                edit
+              </span>
+            </span>
+          </Button>
+        </span>
+      </div>
       <PlayerScoreGrid
         hasButtons={true}
         handleHolePlayerScore={props.handleHolePlayerScore}
@@ -859,6 +925,26 @@ const RunningGame = (props: RunningGameProps) => {
     }
   };
 
+  const handleRenameHole = useCallback((id: string, newName: number, hole: number) => {
+    setGameState((prevValue) => {
+      const currentGame = prevValue.currentGame;
+
+      if (!currentGame || !currentGame.id || !currentGame.holeList || hole === newName) {
+        return prevValue;
+      }
+
+      return {
+        ...prevValue,
+        currentGame: {
+          ...currentGame,
+          holeList: currentGame.holeList.map((h) =>
+            h.id === id ? { ...h, hole: newName } : h
+          ),
+        },
+      };
+    });
+  }, [setGameState]);
+
   // Update the holeListChildrenWidths here when currentGame holeList array changes - it's for caching purposes
   useEffect(() => {
     holeListChildrenWidths.current = null;
@@ -892,6 +978,7 @@ const RunningGame = (props: RunningGameProps) => {
                 handleFinishHole={handleFinishHole}
                 historical={false}
                 holeListLength={currentGame.holeList.length}
+                handleRenameHole={handleRenameHole}
               />
             ))}
           </ul>

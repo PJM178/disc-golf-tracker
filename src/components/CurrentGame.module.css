@@ -199,6 +199,26 @@
   margin: 0 1px 0 0;
 }
 
+.running-game--hole-info--name {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--padding) 0;
+}
+
+.running-game--hole-info--name-input {
+  width: 4rem;
+}
+
+.running-game--hole-info--name-button--container {
+  margin-left: 0.3rem;
+}
+
+.running-game--hole-info--name-button {
+  display: flex;
+  padding: var(--padding);
+}
+
 .running-game--hole-info.disabled> :not(.running-game--hole-info--finish-game--container) {
   opacity: 0.5;
 }
