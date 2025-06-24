@@ -392,6 +392,7 @@ interface GameHoleProps extends Hole {
   historical: boolean;
   holeListLength: number;
   handleRenameHole?: (id: string, newName: number, hole: number) => void;
+  index: number;
 }
 
 export const GameHole = memo(function GameHole(props: GameHoleProps) {
@@ -492,7 +493,7 @@ export const GameHole = memo(function GameHole(props: GameHoleProps) {
           <div
             className={styles["running-game--hole-info--finish-game--button"]}
           >
-            {props.hole === props.holeListLength ?
+            {props.index === (props.holeListLength - 1) ?
               <span>Lisää reikä</span> :
               <span>Reikä valmis</span>}
           </div>
@@ -974,9 +975,10 @@ const RunningGame = (props: RunningGameProps) => {
             ref={holeListRef}
             onScrollEnd={handleULOnScrollEnd}
           >
-            {props.currentGame.holeList.map((hole) => (
+            {props.currentGame.holeList.map((hole, index) => (
               <GameHole
                 key={hole.id}
+                index={index}
                 {...hole}
                 handleHolePlayerScore={handleHolePlayerScore}
                 handleFinishHole={handleFinishHole}

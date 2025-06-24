@@ -143,9 +143,10 @@ const HistoricalGame = (props: HistoricalGameProps) => {
             ref={holeListRef}
             onScrollEnd={handleULOnScrollEnd}
           >
-            {game.holeList.map((hole) => (
+            {game.holeList.map((hole, index) => (
               <GameHole
                 key={hole.id}
+                index={index}
                 {...hole}
                 handleHolePlayerScore={() => null}
                 handleFinishHole={() => null}
