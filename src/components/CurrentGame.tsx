@@ -391,7 +391,7 @@ interface GameHoleProps extends Hole {
   handleFinishHole: (holeId: string) => void;
   historical: boolean;
   holeListLength: number;
-  handleRenameHole: (id: string, newName: number, hole: number) => void;
+  handleRenameHole?: (id: string, newName: number, hole: number) => void;
 }
 
 export const GameHole = memo(function GameHole(props: GameHoleProps) {
@@ -404,7 +404,10 @@ export const GameHole = memo(function GameHole(props: GameHoleProps) {
   };
 
   const handleNameSubmit = () => {
-    props.handleRenameHole(props.id, holeValue, props.hole);
+    if (props.handleRenameHole) {
+      props.handleRenameHole(props.id, holeValue, props.hole);
+    }
+
     setIsRenameOpen(false);
   };
 
@@ -430,7 +433,7 @@ export const GameHole = memo(function GameHole(props: GameHoleProps) {
       <div className={styles["running-game--hole-info--name"]}>
         <span>Reikä&nbsp;</span>
         <span>
-          {isRenameOpen ?
+          {isRenameOpen && !props.historical ?
             <span>
               <TextField
                 ref={nameFieldRef}
@@ -451,18 +454,19 @@ export const GameHole = memo(function GameHole(props: GameHoleProps) {
             </span> :
             <span>{props.hole}</span>}
         </span>
-        <span className={styles["running-game--hole-info--name-button--container"]}>
-          <Button
-            variant="wrapper"
-            onClick={!isRenameOpen ? handleOpenNameEdit : handleNameSubmit}
-          >
-            <span className={styles["running-game--hole-info--name-button"]}>
-              <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
-                edit
+        {!props.historical &&
+          <span className={styles["running-game--hole-info--name-button--container"]}>
+            <Button
+              variant="wrapper"
+              onClick={!isRenameOpen ? handleOpenNameEdit : handleNameSubmit}
+            >
+              <span className={styles["running-game--hole-info--name-button"]}>
+                <span className={`material-symbol--container material-symbols-outlined--not-filled material-symbols-outlined`.trim()}>
+                  edit
+                </span>
               </span>
-            </span>
-          </Button>
-        </span>
+            </Button>
+          </span>}
       </div>
       <PlayerScoreGrid
         hasButtons={true}
